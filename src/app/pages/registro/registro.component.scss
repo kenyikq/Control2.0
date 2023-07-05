@@ -1,0 +1,149 @@
+ion-content{
+    --background: linear-gradient(0deg,rgba(0,0,0,0.7), rgba(0,0,0,0.1)),
+    url("/assets/fondo.png") no-repeat center center / cover;
+}
+h1{
+    text-align:center;
+    color:white;
+    padding: 7px;
+    
+    text-shadow: black;
+    background: #ffc107;
+    opacity: 89%;
+    border-bottom-left-radius: 70px;
+    border-bottom-right-radius: 70px;
+    border-top-left-radius: 70px;
+    border-top-right-radius: 70px;
+    @media screen and (max-width:590px) {
+     
+      
+  }
+    
+  
+}
+.heading{
+    margin-top: 20px;
+    h1{
+        font-size: 1.6rem;
+        font-weight: bolder;
+    }
+
+    p{
+        margin-top: 20px;
+        font-size: 1rem;
+        color:#7b7b7b;
+    }
+}
+
+
+.login-section{
+
+    height:80vhvh !important;
+    width: 100% !important;
+    max-width: 500px !important;
+    
+    right: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    margin-bottom: 30px;
+    
+    margin-left: auto!important;
+    margin-right: auto!important;
+    border-top-left-radius: 46px !important;
+    border-top-right-radius: 46px !important;
+    padding-bottom: 10%;
+    @media screen and (max-width:590px) {
+        height:89vh !important;
+        width: 100% !important;
+        max-width: 350px !important;
+        padding-right: 5%;
+        padding-left: 5%;
+        margin-bottom: 30px;
+        
+    }
+    
+
+    .heading{
+        margin-top: 20px;
+        h1{
+            font-size: 1.6rem;
+            font-weight: bolder;
+        }
+
+        p{
+            margin-top: 20px;
+            font-size: 1rem;
+            color:#7b7b7b;
+        }
+    }
+    
+
+
+}
+
+
+
+
+.form-input{
+    position:relative;
+    margin-bottom: 26px;
+    
+    ion-item::part(native){
+        padding-left: 30px !important;
+    }
+
+
+    
+    ion-icon{
+        position:absolute;
+        top: 25px !important;
+        z-index: 2 !important;
+        font-size: 1.2rem !important;
+        left: 5px !important;
+    }
+
+    ion-input{
+        font-size: 0.9rem !important;
+        --padding-start: 2px !important;
+        --padding-top: 1px !important;
+        color: #7b7b7b;
+    }
+
+}
+
+ion-button{
+    width: 150px;
+    
+    p{
+        margin-top: 15px;
+        font-size: 1rem;
+        color: white;
+    }
+    .button-inner {color:white !important}
+    
+}
+
+.validacion{
+    margin-left: 10%;
+}
+
+.encabezado{
+    text-align: center;
+    background:#ffc107;
+    border-radius: 30px;
+    margin: 30px;
+    color: white;
+}
+
+
+ion-item{
+    padding: 0%;
+    border-radius: 50px;
+
+    @media screen and (max-width:690px) {
+        padding: 0%;
+
+    }
+}    
+
+

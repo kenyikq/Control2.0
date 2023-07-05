@@ -1,0 +1,43 @@
+<ion-app>
+
+  <ion-split-pane when="md" contentId="main">
+    <ion-menu contentId="main">
+      <ion-header>
+        <ion-toolbar style="text-align: center; background-color:  rgb(255, 123, 0) !important;">
+          <ion-title>Menu</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-menu-toggle autoHide="false">
+          <ion-item button="true" detail="true" routerLink="/movimientos">
+            <ion-icon style="color:#ffc107" name="calendar-outline"></ion-icon>
+            <ion-label class="normal"> Movimientos</ion-label>
+          </ion-item>
+
+          <ion-item button="true" detail="true" routerLink="/deudas">
+            <ion-icon style="color:#ffc107" name="card-outline"></ion-icon>
+            <ion-label class="normal"> Control de Deudas</ion-label>
+          </ion-item>
+          <ion-item button="true" detail="true" routerLink="/presupuesto">
+            <ion-icon style="color:#ffc107" name="checkmark-done-circle-outline"></ion-icon>
+            <ion-label class="normal"> Presupuesto</ion-label>
+          </ion-item>
+          <ion-item button="true" detail="true" routerLink="/home">
+            <ion-icon style="color:#ffc107" name="bar-chart-outline"></ion-icon>
+            <ion-label class="normal"> Dashboard</ion-label>
+          </ion-item>
+        </ion-menu-toggle></ion-content>
+      </ion-menu>
+
+      
+
+    <div class="ion-page" id="main">
+      <ion-content class="ion-padding"> <ion-router-outlet id="main"></ion-router-outlet> </ion-content>
+    </div>
+  </ion-split-pane>
+
+
+
+
+
+</ion-app>

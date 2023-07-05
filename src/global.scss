@@ -1,0 +1,81 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import '@ionic/angular/css/display.css';
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+
+@import url('https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400;600&display=swap');
+
+
+.titulo {
+    font-family: 'Wix Madefor Display', sans-serif !important;
+    font-size: 25px !important;
+    font-weight: bold !important;
+    color: antiquewhite !important;
+}
+
+.subtitulo {
+    font-family: 'Wix Madefor Display', sans-serif !important;
+    font-size: 19px !important;
+    font-weight: bold !important;
+    color: antiquewhite !important;
+}
+
+.normal {
+    font-family: 'Wix Madefor Display', sans-serif !important;
+    color: antiquewhite !important;
+    font-size: 14px  !important;
+}
+
+.hide{ //oculta si el ancho es menor que 500
+    visibility: inherit;
+    @media screen and (max-width:500px) {
+      visibility: hidden;
+      position: absolute;
+    }}
+
+    ion-action-sheet.my-custom-class {
+        --background: #ddf540;
+        --backdrop-opacity: 0.6;
+        --button-background-selected: #e97223;
+        --button-color: #000000;
+        --color: #fff;
+        /* role: "destructive" button iOS styling override */
+        --ion-color-danger: #000000;
+        -ms-flex-item-align: center;
+      }
+      .colorB{
+        background-color: #ffc107;
+      }
+
+      .color{
+        color: #ffc107;
+        
+      }
+
+      ion-content{
+        --background: linear-gradient(0deg,rgba(0,0,0,0.7), rgba(0,0,0,0.1)),
+        url("/assets/fondo.png") no-repeat center center / cover;
+    }

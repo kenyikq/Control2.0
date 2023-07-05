@@ -1,0 +1,224 @@
+<ion-header>
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="end" >
+        <ion-button [routerLink]= "['/home']" >
+          <ion-icon class="color" style="width: 22px;" name="home" slot="icon-only"></ion-icon>
+          
+        </ion-button>
+        <ion-button [routerLink]= "['/usuario']"   >
+          <ion-icon class="color" name="person-circle-outline" slot="icon-only"></ion-icon>
+          
+        </ion-button>
+        
+        </ion-buttons>
+
+        <ion-buttons slot="start">
+          <ion-menu-button style="color: #ffc107"></ion-menu-button>
+        </ion-buttons>
+      <ion-title class="subtitulo" style="text-align: center;">Movimientos</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+</ion-header>
+
+<ion-content>
+ 
+  <ion-card *ngIf="status != 'visualizando'" class="normal contenedor">
+    <form [formGroup]="myForm" novalidate> 
+    <h1 class="subtitulo p-3 text-center encabezado colorB" style="border-radius: 15px;">Ingrese los datos</h1>
+   
+    <ion-list [ngModelOptions]="{standalone: true}">
+      <ion-item id="open-modal2">
+        <ion-label style="    margin-left: 3px;">Fecha:</ion-label>
+        <ion-note class="normal" slot="end">{{newRegistro.fecha}}</ion-note>
+      </ion-item>
+      <ion-modal trigger="open-modal2" [cssClass]="'bottom-end'">
+        <ng-template>
+          
+          <ion-datetime [ngModelOptions]="{standalone: true}"
+            presentation="newRegistro.fecha"
+            [(ngModel)]="date"
+            size="cover"
+            [showDefaultButtons]="true"
+            doneText="Seleccionar" cancelText="Cancelar"
+            displayFormat="YYYY-MM-DD"
+            (ionChange)="fechaa()"
+          ></ion-datetime>
+        </ng-template> </ion-modal >
+  </ion-list>
+
+  <ion-list>
+    <ion-item>
+      <ion-label > 
+        Categoria:
+       </ion-label>
+      <ion-select clearInput="true"  formControlName="categoria" required="true" mode="ios" label="Categoria:" aria-label="Fruit" interface="popover" value="newRegistro.categoria" [(ngModel)]="newRegistro.categoria"placeholder=" Seleccionar">
+        <ion-select-option value="Ingresos">Ingresos</ion-select-option>
+        <ion-select-option value="Gastos">Gastos</ion-select-option>
+       
+      </ion-select>
+    </ion-item>
+    <span class="normal" *ngIf="this.myForm.get('categoria')?.hasError('required') && myForm.get('categoria')?.touched">
+      <ion-label color="danger">Categoria es requerida.</ion-label>
+    </span>
+  </ion-list>
+  
+
+  <ion-list  *ngIf="newRegistro.categoria !='' ">
+    <ion-item>
+      <ion-label > 
+        Subcategoria:
+       </ion-label>
+      <ion-select  clearInput="true"  formControlName="subcategoria"  required="true" mode="ios" label="Subcategoria:" aria-label="Fruit" interface="popover" value="newRegistro.subcategoria" [(ngModel)]="newRegistro.subcategoria"placeholder="Seleccionar">
+        <ion-select-option *ngIf="newRegistro.categoria == 'Ingresos'" value="Sueldo">Sueldo</ion-select-option>
+        <ion-select-option *ngIf="newRegistro.categoria == 'Ingresos'" value="Regalo">Regalo</ion-select-option>
+        <ion-select-option *ngIf="newRegistro.categoria == 'Gastos'" value="Compra">Compra</ion-select-option>
+        <ion-select-option *ngIf="newRegistro.categoria == 'Gastos'" value="Combustible">Combustible</ion-select-option>
+        <ion-select-option *ngIf="newRegistro.categoria == 'Gastos'" value="Comida">Comida</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <span class="normal" *ngIf="this.myForm.get('subcategoria')?.hasError('required') && myForm.get('subcategoria')?.touched">
+      <ion-label color="danger">Subcategoria es requerida.</ion-label>
+    </span>
+  </ion-list>
+
+      <ion-item>
+        
+        <ion-input label="Concepto" clearInput [ngModelOptions]="{standalone: true}" required="true" [(ngModel)]="newRegistro.concepto" type="string" inputmode="text"></ion-input>
+      </ion-item>
+
+   
+
+      <ion-item>  
+       
+        <ion-input clearInput="true"  formControlName="monto"  required="true" label="Monto:" type="number" inputmode="numeric" [(ngModel)]="newRegistro.monto"></ion-input>
+
+      
+      <span class="normal" *ngIf="this.myForm.get('monto')?.hasError('required') && myForm.get('monto')?.touched">
+        <ion-label color="danger">Monto es requerido.</ion-label>
+      </span>
+      <span class="normal" *ngIf="this.myForm.get('monto')?.hasError('min') && myForm.get('monto')?.touched">
+        <ion-label color="danger">El monto debe de ser mayor que cero.</ion-label>
+      </span>
+      </ion-item>
+<div class="normal" style="text-align: center; align-items: center;">
+  <ion-button  shape="round" color="dark" (click)="guardardatos()">
+    Guardar
+  </ion-button>
+  <ion-button   shape="round" color="danger" (click)="cancelar()">
+    Cancelar
+  </ion-button>
+</div> 
+   
+</form>
+
+  </ion-card>
+
+  <ion-content *ngIf="status== 'visualizando'" class="normal">
+    
+    <h2 style="margin-bottom: 15px;" class="subtitulo text-center ">Historico de Movimientos</h2>
+    <!---Tabla de transacciones-->
+<div   class="m-3">
+  <ion-segment [scrollable]="true" (ionChange)="changeSegment($event)" value="Todos" mode="ios" >
+    <ion-segment-button value="Todos">
+      <ion-label class="normal" >Todos</ion-label>
+    </ion-segment-button>  
+    <ion-segment-button value="Ingresos">
+        <ion-label class="normal">Ingresos</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="Gastos">
+        <ion-label class="normal" >Gastos</ion-label>
+      </ion-segment-button>
+     
+    </ion-segment>
+  </div>
+
+
+    
+
+   <ion-card style="margin: 2%">
+<div style="margin-left: calc(90% - 100px); "><ion-list>
+      <ion-item>
+        <ion-select 
+        placeholder="Filtrar Mes"
+        mode="ios"
+        aria-label="Fruit" 
+           justify="end" 
+        interface="alert"
+        toggleIcon="add"
+      expandedIcon="remove"
+        [multiple]="true"
+        [(ngModel)]="mesSeleccion"
+        (ionChange)="filtroMes()">
+          <ion-select-option value="enero">Enero</ion-select-option>
+          <ion-select-option value="febrero">Febrero</ion-select-option>
+          <ion-select-option value="marzo">Marzo</ion-select-option>
+          <ion-select-option value="abrir">Abrir</ion-select-option>
+          <ion-select-option value="mayo">Mayo</ion-select-option>
+          <ion-select-option value="junio">Junio</ion-select-option>
+          <ion-select-option value="julio">Julio</ion-select-option>
+          <ion-select-option value="agosto">Agosto</ion-select-option>
+          <ion-select-option value="septiembre">Septiembre</ion-select-option>
+          <ion-select-option value="octubre">Octubre</ion-select-option>
+          <ion-select-option value="noviembre">Noviembre</ion-select-option>
+          <ion-select-option value="diciembre">Diciembre</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-list></div>
+    
+
+    <ion-grid mode="ios" class="ion-text-center">
+  
+    
+      <ion-row class="header-row colorB">
+        <ion-col >
+          <ion-text>Fecha</ion-text>
+        </ion-col>
+  
+        <ion-col>
+          <ion-text>Categoria</ion-text>
+        </ion-col>
+  
+        <ion-col>
+          <ion-text>SubCategoria</ion-text>
+        </ion-col>
+        <ion-col class="hide">
+          <ion-text>Concepto</ion-text>
+        </ion-col>
+        <ion-col>
+          <ion-text>Monto</ion-text>
+        </ion-col>
+      </ion-row>
+  
+   
+      <ion-row mode="ios" class="wrapper" *ngFor="let registro of registros" (click)="presentActionSheet(registro)">
+        <ion-col style="width: 90px; ">{{registro.fecha  | date: 'dd/MM/yy'}}</ion-col>
+        <ion-col>{{registro.mes}}</ion-col>
+        <ion-col>{{registro.subcategoria}}</ion-col>
+        <ion-col class="hide">{{registro.concepto}}</ion-col>
+        <ion-col>{{registro.monto | number}}</ion-col>
+        <ion-ripple-effect></ion-ripple-effect>
+      </ion-row>
+  
+    </ion-grid>
+    <ion-footer>
+      <ion-card style=" text-align: end;;">
+        <ion-label style="margin: 5%;color: #93f86c !important;" class="normal">Ingresos= {{totalIngreso | number}} </ion-label>
+        <ion-label  style="margin-right:5%; color: #f17f7f !important;" class="normal">Gastos= {{totalGasto | number}} </ion-label>
+    
+      </ion-card>
+    </ion-footer>
+  </ion-card>
+
+    <ion-fab  style="margin-top: 29px;" slot="fixed" vertical="top" horizontal="end" [edge]="true">
+      <ion-fab-button (click)="status='creando'" size="small" >
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+
+    </ion-fab>
+   
+  </ion-content>
+
+
+</ion-content>

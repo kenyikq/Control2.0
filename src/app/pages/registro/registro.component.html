@@ -1,0 +1,128 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="end" >
+      <ion-button [routerLink]= "['/home']" >
+        <ion-icon class="color" style="width: 22px;" name="home" slot="icon-only"></ion-icon>
+        
+      </ion-button>
+    
+      
+      </ion-buttons>
+
+      <ion-buttons slot="start">
+        <ion-menu-button style="color: #ffc107"></ion-menu-button>
+      </ion-buttons>
+    <ion-title class="subtitulo" style="text-align: center; margin-right: 5%;">
+      Registro
+    </ion-title>
+    
+ 
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <form [formGroup]="myForm" (ngSubmit)="submitForm()"  novalidate> 
+  <h3 class ="subtitulo p-3 encabezado"> Datos del Usuario</h3>
+  <div  class="login-section">
+    
+    <div class="form-input">
+      <ion-icon lot="start" name="person-outline"></ion-icon>
+      
+      <ion-item>
+          <ion-input class="normal" label="Nombre" clearInput="true"  formControlName="nombre" [(ngModel)]="usuario.nombre" class="normal" type="string" inputmode="text" placeholder="Introduzca su Nombre" required></ion-input>
+        
+         </ion-item>
+      <span class="normal" *ngIf="this.myForm.get('nombre')?.hasError('required') && myForm.get('nombre')?.touched">
+          <ion-label color="danger">Nombre es requerido.</ion-label>
+        </span>
+      
+    </div>
+
+
+ 
+  <div class="form-input">
+    <ion-icon lot="start" name="call-outline"></ion-icon>
+        <ion-item>
+      
+      <ion-input class="normal" label="Contacto" (ngModelChange)="validarcel()"  pattern="^[0-9\-]*$" clearInput="true" formControlName="celular" [(ngModel)]="usuario.contacto" required class="normal" type="tel"
+       inputmode="tel" placeholder="Introduzca su numero de contacto"></ion-input>
+     
+    </ion-item>
+
+    <span  class="normal"  *ngIf="this.myForm.get('celular')?.hasError('required') && myForm.get('celular')?.touched">
+      <ion-label color="danger">Numero Celular requerido.</ion-label> 
+    </span>
+    <span class="normal"    *ngIf="this.myForm.get('celular')?.hasError('pattern') && myForm.get('celular')?.touched">
+      <ion-label color="danger">El formato no es correcto. Ejemplo: 809-782-8923.</ion-label>     </span>
+      <span class="normal"    *ngIf="!validarcel()">
+        <ion-label color="danger">El formato no es correcto. Ejemplo: 809-782-8923.</ion-label>     </span>
+  </div>
+  
+  
+
+  <div class="form-input">
+    <ion-icon lot="start" name="mail-outline"></ion-icon>
+        <ion-item>
+     
+      <ion-input class="normal" label="Correo" clearInput="true"  formControlName="email" [(ngModel)]="usuario.email" class="normal" type="email" inputmode="email" 
+      required
+      placeholder="Introduzca su correo electrónico"></ion-input>
+    
+    </ion-item>
+    <span class="normal" *ngIf="this.myForm.get('email')?.hasError('required') && myForm.get('email')?.touched">
+      <ion-label color="danger">Correo requerido.</ion-label>
+    </span>
+    <span   class="normal"  *ngIf="this.myForm.get('email')?.hasError('pattern') && myForm.get('email')?.touched">
+      <ion-label color="danger">El formato no es correcto. </ion-label>
+    </span>
+  </div>
+
+  <div class="form-input">
+    <ion-icon lot="start" name="lock-closed-outline"></ion-icon>
+    <ion-item>
+      <ion-input class="normal" label="Clave" clearInput="true" pattern="^(?=.*[A-Z]).{6,}$" formControlName="password" [(ngModel)]="usuario.password" required class="normal" type="password" inputmode="password" placeholder="Introduzca su clave de acceso"></ion-input>
+    
+    </ion-item>
+    <span class="validacion normal" *ngIf="this.myForm.get('password')?.hasError('required') && myForm.get('password')?.touched">
+      <ion-label color="danger">Clave requerida.</ion-label>
+    </span>
+    <span class="validacion normal"    *ngIf="this.myForm.get('password')?.hasError('pattern') ">
+      <ion-label  color="danger"> El formato no es correcto. </ion-label>
+      <p Class="normal" color="danger" class="danger">Debe tener al menos 6 caracteres y al menos una mayuscula.</p>
+    </span>
+    
+  </div>
+
+  
+
+  <div *ngIf="!uid.length" class="form-input">
+    <ion-icon lot="start" name="lock-closed-outline"></ion-icon>
+    <ion-item >
+     <ion-input class="normal" label="Confirmar clave" formControlName="confirmarpassword" clearInput="true" required [ngModelOptions]="{standalone: true}"  *ngIf="!uid.length" [(ngModel)]="confirmarPass" class="normal" type="password" inputmode="password" placeholder="Repita su clave de acceso"></ion-input>
+    </ion-item>
+    
+    
+  </div>
+
+  
+
+  
+
+<div  style="text-align: center; margin-top: 15px; margin-bottom: 17px;">
+  <ion-button  style="--background: #ffc107" *ngIf="!uid.length" shape="round" (click)="registrar()"  >Registrar</ion-button>  
+  <ion-button *ngIf="uid.length" shape="round" (click)="salir()" >Salir</ion-button>  
+</div>
+<div *ngIf="!uid.length" style=" color:white; font-size:18px ; text-align: center;"><ion-label style="text-align: center;">Ya tienes un usuario? :</ion-label></div>
+
+<div *ngIf="!uid.length"  style="text-align: center; margin-top: 15px;">
+  
+  
+  <ion-button  style="--background: #ffc107" class="signup-button" shape="round" [routerLink]="['/login']" >Ingresar</ion-button>  
+  <ion-button  style="--background: #ffc107" class="signup-button" shape="round" (click)="salir()" >prueba</ion-button>  
+  
+</div>
+ 
+</div>
+</form>
+</ion-content>

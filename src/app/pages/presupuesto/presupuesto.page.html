@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-header>
+    <ion-toolbar>
+     
+      <ion-buttons slot="end" >
+        <ion-button [routerLink]= "['/home']" >
+          <ion-icon class="color" style="width: 22px;" name="home" slot="icon-only"></ion-icon>
+          
+        </ion-button>
+        <ion-button [routerLink]= "['/usuario']"   >
+          <ion-icon class="color" name="person-circle-outline" slot="icon-only"></ion-icon>
+          
+        </ion-button>
+        
+        </ion-buttons>
+
+        <ion-buttons slot="start">
+          <ion-menu-button style="color: #ffc107"></ion-menu-button>
+        </ion-buttons>
+      <ion-title class="subtitulo" style="text-align: center;">Presupuesto</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card class="normal">
+    <h1 class="subtitulo p-3 text-center encabezado">Ingrese los datos</h1>
+  
+    <ion-item>
+      <ion-label position="floating"> 
+       Categoria:
+      </ion-label>
+      <ion-input type="string" inputmode="text"></ion-input>
+    </ion-item>
+  
+  </ion-card>
+</ion-content>
