@@ -10,6 +10,28 @@ import { FirestoreService } from 'src/app/services/firestore.service';
   styleUrls: ['./presupuesto.page.scss'],
 })
 export class PresupuestoPage implements OnInit {
+
+  todoList=[{
+    itemName:'algo',
+    itemDueDate:'6-10-21',
+    itemPriority:'alta',
+    itemCategory:'work'
+  },
+  {
+    itemName:'algo',
+    itemDueDate:'6-10-21',
+    itemPriority:'media',
+    itemCategory:'personal'
+  },
+  {
+    itemName:'algo',
+    itemDueDate:'6-10-21',
+    itemPriority:'baja',
+    itemCategory:'work'
+  },
+
+];
+
   loading: any;
 uid='';
 private path= 'usuarios/'+this.uid+'/presupuesto/';
@@ -36,6 +58,12 @@ private path= 'usuarios/'+this.uid+'/presupuesto/';
   }
 
   ngOnInit() {
+  }
+  addTask(){
+
+  }
+  onItemClick() {
+    // Acciones a realizar cuando se hace clic en el elemento
   }
 
   async presentToast(msg: string) {

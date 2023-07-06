@@ -1,0 +1,16 @@
+ion-content{
+
+    --background:#f0f4fd;
+
+    p{
+        font-size: 16px;
+        font-weight: 300;
+       // color:#8c8c8c;
+        margin:0;
+    }
+
+}
+ion-item.ion-activatable {
+    --highlight-color-focused: #ff0000; /* Color de resaltado al enfocar el elemento */
+    --highlight-color-activated: #ff0000; /* Color de resaltado al activar el elemento */
+  }

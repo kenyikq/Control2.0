@@ -25,14 +25,50 @@
 
 <ion-content [fullscreen]="true">
   <ion-card class="normal">
-    <h1 class="subtitulo p-3 text-center encabezado">Ingrese los datos</h1>
+    <h1 class="subtitulo p-3 text-center encabezado">Presupuesto</h1>
   
-    <ion-item>
-      <ion-label position="floating"> 
-       Categoria:
-      </ion-label>
-      <ion-input type="string" inputmode="text"></ion-input>
-    </ion-item>
+    <ion-card *ngFor="let item of todoList" class="ion-margin">
+      <ion-card-deader>
+        <ion-card-subtittle [style.color]="item.itemPriority === 'alta'? 'red': (item.itemPriority === 'baja'? 'green': 'orange')">
+          {{item.itemCategory}}
+        </ion-card-subtittle>
+        <ion-item>
+          <ion-icon *ngIf="item.itemPriority === 'alta'" color="danger" size="small" name="ellipse"></ion-icon>
+          <ion-icon *ngIf="item.itemPriority === 'baja'" color="success" size="small" name="ellipse"></ion-icon>
+          <ion-icon *ngIf="item.itemPriority === 'media'" color="warning" size="small" name="ellipse"></ion-icon>
+          <ion-label>{{item.itemName}}</ion-label>
+        </ion-item>
+      </ion-card-deader>
+
+      <ion-card-content>
+        <ion-label>Fecha: {{item.itemDueDate | date:'fullDate' }}</ion-label>
+      </ion-card-content>
+
+        <ion-row>
+          <ion-item class="ion-activatable" (click)="onItemClick()">
+            
+            <p><ion-icon name="share-outline"></ion-icon> Compartir</p>
+          </ion-item>
+          <ion-item class="ion-activatable" (click)="onItemClick()">
+            
+            <p><ion-icon name="checkmark-outline"></ion-icon> Completar</p>
+          </ion-item>
+          <ion-item class="ion-activatable" (click)="onItemClick()">
+            
+            <p><ion-icon name="trash-outline"></ion-icon> Cancelar</p>
+          </ion-item>
+        </ion-row>
+
+
+    </ion-card>
+    
   
   </ion-card>
+
+
+  <ion-fab color="primary" vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="addTask()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
