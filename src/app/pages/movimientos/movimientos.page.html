@@ -24,7 +24,7 @@
 
 <ion-content>
  
-  <ion-card *ngIf="status != 'visualizando'" class="normal contenedor">
+  <ion-card *ngIf="status !== 'visualizando'" class="normal contenedor">
     <form [formGroup]="myForm" novalidate> 
     <h1 class="subtitulo p-3 text-center encabezado colorB" style="border-radius: 15px;">Ingrese los datos</h1>
    
@@ -65,17 +65,17 @@
   </ion-list>
   
 
-  <ion-list  *ngIf="newRegistro.categoria !='' ">
+  <ion-list  *ngIf="newRegistro.categoria !=='' ">
     <ion-item>
       <ion-label > 
         Subcategoria:
        </ion-label>
       <ion-select  clearInput="true"  formControlName="subcategoria"  required="true" mode="ios" label="Subcategoria:" aria-label="Fruit" interface="popover" value="newRegistro.subcategoria" [(ngModel)]="newRegistro.subcategoria"placeholder="Seleccionar">
-        <ion-select-option *ngIf="newRegistro.categoria == 'Ingresos'" value="Sueldo">Sueldo</ion-select-option>
-        <ion-select-option *ngIf="newRegistro.categoria == 'Ingresos'" value="Regalo">Regalo</ion-select-option>
-        <ion-select-option *ngIf="newRegistro.categoria == 'Gastos'" value="Compra">Compra</ion-select-option>
-        <ion-select-option *ngIf="newRegistro.categoria == 'Gastos'" value="Combustible">Combustible</ion-select-option>
-        <ion-select-option *ngIf="newRegistro.categoria == 'Gastos'" value="Comida">Comida</ion-select-option>
+        <ion-select-option *ngIf="newRegistro.categoria === 'Ingresos'" value="Sueldo">Sueldo</ion-select-option>
+        <ion-select-option *ngIf="newRegistro.categoria === 'Ingresos'" value="Regalo">Regalo</ion-select-option>
+        <ion-select-option *ngIf="newRegistro.categoria === 'Gastos'" value="Compra">Compra</ion-select-option>
+        <ion-select-option *ngIf="newRegistro.categoria === 'Gastos'" value="Combustible">Combustible</ion-select-option>
+        <ion-select-option *ngIf="newRegistro.categoria === 'Gastos'" value="Comida">Comida</ion-select-option>
       </ion-select>
     </ion-item>
     <span class="normal" *ngIf="this.myForm.get('subcategoria')?.hasError('required') && myForm.get('subcategoria')?.touched">
@@ -115,7 +115,7 @@
 
   </ion-card>
 
-  <ion-content *ngIf="status== 'visualizando'" class="normal">
+  <ion-content *ngIf="status=== 'visualizando'" class="normal">
     
     <h2 style="margin-bottom: 15px;" class="subtitulo text-center ">Historico de Movimientos</h2>
     <!---Tabla de transacciones-->

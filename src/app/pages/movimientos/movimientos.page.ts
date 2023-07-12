@@ -128,27 +128,7 @@ this.idusuario().then(res=>{
     this.segmentoSeleccion = ev.detail.value;
     this.filtroMes();
 
-/*
-    if (res === 'todos') {this.getregistros();}
-    else{
-    if (res === 'ingresos') {
-      const consulta = this.firestoreservice.getCollectionquery<Registro>(this.path, 'categoria', '==', 'Ingresos');
-      consulta.subscribe(res => {
-        this.registros = res;
-      });
-
-
-    }
-    else {
-      const consulta = this.firestoreservice.getCollectionquery<Registro>(this.path, 'categoria', '==', 'Gastos');
-      consulta.subscribe(res => {
-        this.registros = res;
-      });
-
-
-    }}
-*/
-    
+  
 
 
       

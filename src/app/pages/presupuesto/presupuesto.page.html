@@ -23,25 +23,44 @@
 
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-card class="normal">
-    <h1 class="subtitulo p-3 text-center encabezado">Presupuesto</h1>
+<ion-content [fullscreen]="true" style.color="black">
+  <ion-card class="normal" style="background: black;">
+
+    <h1 style="color: aliceblue !important;" class="subtitulo p-3 text-center encabezado">{{encabezado}}</h1>
   
-    <ion-card *ngFor="let item of todoList" class="ion-margin">
+    <ion-card style="background: rgb(248, 246, 246);" *ngFor="let tarea of todoList" class="ion-margin">
       <ion-card-deader>
-        <ion-card-subtittle [style.color]="item.itemPriority === 'alta'? 'red': (item.itemPriority === 'baja'? 'green': 'orange')">
-          {{item.itemCategory}}
+        <ion-card-subtittle [style.color]="tarea.tipoGasto === 'Fijo'? 'red': (tarea.tipoGasto === 'Variable'? 'green': 'orange')">
+          {{tarea.tipoGasto}}
         </ion-card-subtittle>
         <ion-item>
-          <ion-icon *ngIf="item.itemPriority === 'alta'" color="danger" size="small" name="ellipse"></ion-icon>
-          <ion-icon *ngIf="item.itemPriority === 'baja'" color="success" size="small" name="ellipse"></ion-icon>
-          <ion-icon *ngIf="item.itemPriority === 'media'" color="warning" size="small" name="ellipse"></ion-icon>
+          <ion-icon *ngIf="tarea.tipoGasto === 'Fijo'" color="danger" size="small" name="ellipse"></ion-icon>
+          <ion-icon *ngIf="tarea.tipoGasto === 'Variable'" color="success" size="small" name="ellipse"></ion-icon>
+          <ion-icon *ngIf="tarea.tipoGasto === 'Esporadico'" color="warning" size="small" name="ellipse"></ion-icon>
           <ion-label>{{item.itemName}}</ion-label>
         </ion-item>
       </ion-card-deader>
 
       <ion-card-content>
-        <ion-label>Fecha: {{item.itemDueDate | date:'fullDate' }}</ion-label>
+        <ion-accordion-group>
+          <ion-accordion value="first">
+            <ion-item slot="header" color="light">
+              <ion-label class="subtitulo">Detalles</ion-label>
+            </ion-item>
+
+            <div class="normal p-2" slot="content">tarea.tiopoGasto</div>
+
+            <div class="normal p-2" slot="content">tarea.monto</div>
+          </ion-accordion>
+          
+            <ion-accordion value="first">
+              <ion-item slot="header" color="light">
+                <ion-label>First Accordion</ion-label>
+              </ion-item>
+              <div class="ion-padding" slot="content">First Content</div>
+            </ion-accordion>
+          </ion-accordion-group>
+        <ion-label>Fecha: {{tarea.fecha | date:'fullDate' }}</ion-label>
       </ion-card-content>
 
         <ion-row>
@@ -64,11 +83,115 @@
     
   
   </ion-card>
+  
+  <div >
+    
+    
+     
+      <ion-modal mode="ios" #modal  [canDismiss]="canDismiss" [presentingElement]="presentingElement">
+        <ng-template>
+          <ion-header>
+            <ion-toolbar>
+              <ion-title>Nueva Tarea</ion-title>
+              <ion-buttons slot="end">
+                <ion-button (click)="modal.dismiss()">Close</ion-button>
+              </ion-buttons>
+              <ion-buttons slot="start">
+                <ion-button (click)="agregarTarea()">Agregar</ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+
+          <ion-content>
+          <form [formGroup]="myForm" novalidate>
+            <ion-card>
+           
+           
+              <ion-item>
+        
+                <ion-input label="Descripcion: " clearInput formControlName="descripcion"  required="true" [(ngModel)]="newtarea.descripcion" type="string" inputmode="text"></ion-input>
+              </ion-item>
+            
+           
+              
+              <ion-list [ngModelOptions]="{standalone: true}">
+                <ion-item id="open-modal2">
+                  <ion-label style="    margin-left: 3px;">Fecha:</ion-label>
+                  <ion-note class="normal" slot="end">{{date}}</ion-note>
+                </ion-item>
+                <ion-modal trigger="open-modal2" [cssClass]="'bottom-end'">
+                  <ng-template>
+                    
+                    <ion-datetime [ngModelOptions]="{standalone: true}"
+                      presentation="tarea.fecha"
+                      [(ngModel)]="date"
+                      size="cover"
+                      [showDefaultButtons]="true"
+                      doneText="Seleccionar" cancelText="Cancelar"
+                      displayFormat="YYYY-MM-DD"
+                      (ionChange)="fechaa()"
+                    ></ion-datetime>
+                  </ng-template> </ion-modal >
+            </ion-list>
+
+            <ion-item>
+
+              <ion-label > 
+                Subcategoria:
+               </ion-label>
+              <ion-select  clearInput="true"  formControlName="subcategoria"  required="true" mode="ios" label="Subcategoria:" aria-label="Fruit" interface="popover" value="newtarea.subcategoria" [(ngModel)]= "newtarea.subcategoria" placeholder="Seleccionar">
+                <ion-select-option  value="Sueldo">Sueldo</ion-select-option>
+                <ion-select-option  value="Regalo">Regalo</ion-select-option>
+                <ion-select-option  value="Compra">Compra</ion-select-option>
+                <ion-select-option  value="Combustible">Combustible</ion-select-option>
+                <ion-select-option  value="Comida">Comida</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+        
+              <ion-input label="Monto: " clearInput  formControlName="monto" required="true" [(ngModel)]="newtarea.monto" type="number" inputmode="number"></ion-input>
+            </ion-item>
+
+          </ion-card>
+            
+          </form>
+           
+
+            
+          </ion-content>
+        </ng-template>
+      </ion-modal>
+    
+  </div>
+
+ 
+<ion-action-sheet mode="ios"
+  [isOpen]="isActionSheetOpen"
+  header="Elegir Quincena"
+  class="my-custom-class"
+  [buttons]="actionSheetButtons"
+  (didDismiss)="isActionSheetOpen = false"
+></ion-action-sheet>
 
 
-  <ion-fab color="primary" vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="addTask()">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
+ 
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar><ion-tabs>
+    <ion-tab-bar slot="bottom">
+      <ion-tab-button (click)="isActionSheetOpen = true">
+        <ion-icon name="calendar"></ion-icon>
+        Quincena
+      </ion-tab-button>
+      
+
+      <ion-tab-button  (click)="modal.present()" >
+        <ion-icon name="add-circle"></ion-icon>
+        Agregar Nueva
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+</ion-toolbar>
+  
+ </ion-footer>

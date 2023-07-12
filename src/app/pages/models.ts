@@ -76,6 +76,17 @@ export interface Usuario{
     
     }
 
+    export interface Tarea{
+        id: string;
+        descripcion: string;
+        tipoGasto: string;
+        subcategoria: string;
+        monto: number;
+        fecha: string;
+        status: string
+
+    }
+
     export interface Datos {
         mes: Array<string>;
         ingresos:Array<any>;

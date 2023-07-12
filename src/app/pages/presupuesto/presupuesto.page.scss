@@ -1,6 +1,6 @@
 ion-content{
 
-    --background:#f0f4fd;
+    --background:#dee0e4;
 
     p{
         font-size: 16px;
@@ -13,4 +13,31 @@ ion-content{
 ion-item.ion-activatable {
     --highlight-color-focused: #ff0000; /* Color de resaltado al enfocar el elemento */
     --highlight-color-activated: #ff0000; /* Color de resaltado al activar el elemento */
+  }
+
+  // Tema oscuro
+$color-fondo-oscuro: #333;
+$color-texto-oscuro: #fff;
+
+// Tema claro
+$color-fondo-claro: #f2f2f2;
+$color-texto-claro: #333;
+
+body {
+    background-color: $color-fondo-claro; // Establece el color de fondo por defecto para el tema claro
+  
+    // Verifica si se ha elegido el tema oscuro y actualiza el color de fondo y el color del texto en consecuencia
+    &.tema-oscuro {
+      background-color: $color-fondo-oscuro;
+      color: $color-texto-oscuro;
+    }
+  }
+  ion-action-sheet.my-custom-class {
+    --background: #f3fafc;
+    --backdrop-opacity: 0.6;
+    --button-background-selected: #404934;
+    --button-color: #2a2b25;
+    --color: #1f1d1d;
+    /* role: "destructive" button iOS styling override */
+    --ion-color-danger: #494545;
   }
