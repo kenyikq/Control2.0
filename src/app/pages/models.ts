@@ -79,7 +79,7 @@ export interface Usuario{
     export interface Tarea{
         id: string;
         descripcion: string;
-        tipoGasto: string;
+        categoria: string;
         subcategoria: string;
         monto: number;
         fecha: string;

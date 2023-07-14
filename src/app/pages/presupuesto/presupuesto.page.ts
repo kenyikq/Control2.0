@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AlertController, LoadingController, NavController, ToastController } from '@ionic/angular';
@@ -5,8 +6,8 @@ import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { Tarea } from '../models';
 import * as moment from 'moment';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+
+
 
 
 @Component({
@@ -15,6 +16,7 @@ import { es } from 'date-fns/locale';
   styleUrls: ['./presupuesto.page.scss'],
 })
 export class PresupuestoPage implements OnInit {
+ 
 
   todoList: Tarea[]=[];
   canDismiss = true;
@@ -67,6 +69,8 @@ private path= 'usuarios/'+this.uid+'/presupuesto/';
   editar() {
     // Acciones a realizar cuando se hace clic en el elemento
   }
+
+  
 
   async presentToast(msg: string) {
     const toast = await this.toastCtrl.create({

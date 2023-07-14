@@ -1,3 +1,4 @@
+
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
@@ -13,21 +14,21 @@ import { AngularFireModule } from '@angular/fire/compat';//colacar para firebase
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';// importar para las validaciones
-import { NgApexchartsModule } from "ng-apexcharts";
+
 import { FirebaseauthService } from './services/firebaseauth.service';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent,],
   imports: [BrowserModule, 
     IonicModule.forRoot(),
     PagesModule, //se importa
     FirestoreModule,
+    
     AngularFireModule.initializeApp(environment.firebase),//colacar para firebase
     AngularFirestoreModule,
     AngularFireAuthModule,
     AppRoutingModule,
     FormsModule,
-    NgApexchartsModule,
     ReactiveFormsModule],
     
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, FirebaseauthService],

@@ -23,45 +23,47 @@
 
 </ion-header>
 
-<ion-content [fullscreen]="true" style.color="black">
-  <ion-card class="normal" style="background: linear-gradient(#121212, #ffffff);;" >
+<ion-content [fullscreen]="true" style.color="black" >
+  <ion-card class="normal" style="background: linear-gradient(#121212, #ffffff);" >
 
     <h1  class="subtitulo p-3 text-center encabezado">{{encabezado}}</h1>
-  
-    <ion-card *ngFor="let tarea of todoList" class="ion-margin">
+  <div  >
+    <ion-card *ngFor="let tarea of todoList" class="ion-margin" style="max-width: 450px; margin-left: auto; margin-right: auto;">
       <div style=" text-align: center;"><ion-label class="subtitulo"  [style.color]="tarea.status === 'Completado'? '#72e776 !important' :'#ef3535 !important'">{{tarea.status}}</ion-label>
       </div>
         <ion-card-deader>
-        <ion-card-subtittle [style.color]="tarea.categoria === 'Fijo'? '#DC143C': (tarea.categoria === 'Variable'? 'green': (tarea.categoria === 'Esporadico'? 'orange': 'green'))">
+        <ion-card-subtittle style="font-weight: 650;" class="normal" [style.color]="tarea.categoria === 'Fijo'? '#DC143C': (tarea.categoria === 'Variable'? 'green': (tarea.categoria === 'Esporadico'? 'orange': 'green'))">
           {{tarea.categoria}}
         </ion-card-subtittle>
         <ion-item>
           <ion-icon *ngIf="tarea.categoria === 'Fijo'" color="danger" size="small" name="ellipse"></ion-icon>
           <ion-icon *ngIf="tarea.categoria === 'Variable'" color="success" size="small" name="ellipse"></ion-icon>
           <ion-icon *ngIf="tarea.categoria === 'Esporadico'" color="warning" size="small" name="ellipse"></ion-icon>
-          <ion-label>{{tarea.descripcion}}</ion-label>
+          <ion-label class="subtitulo">{{tarea.descripcion}}</ion-label>
         </ion-item>
       </ion-card-deader>
 
-      <ion-card-content>
+      <ion-card-content class="normal">
         <ion-accordion-group>
           <ion-accordion value="first">
             <ion-item slot="header" color="light">
-              <ion-label class="subtitulo">Detalles</ion-label>
+              <ion-label style="font-weight: 600;">Detalles</ion-label>
             </ion-item>
 
-            <div class="normal p-2" slot="content">{{tarea.tiopoGasto}}</div>
-
-            <div class="normal p-2" slot="content">{{tarea.monto | number}} $RD</div>
+            <div class="normal p-2" slot="content">Subcategoria: {{tarea.subcategoria}}</div>
+            <div class="normal p-2" slot="content">Recurrencia: {{tarea.categoria}}</div>
+            <div class="normal p-2" slot="content">Monto: {{tarea.monto | number}} $RD</div>
           </ion-accordion>
           
           
           </ion-accordion-group>
-        <ion-label>Fecha: {{tarea.fecha |  date: 'EEEE, d MMMM y'  }}</ion-label>
+        <ion-label class="normal">Fecha: {{tarea.fecha | fechaLarga  }}</ion-label>
       </ion-card-content>
 
-        <ion-row>
-          <ion-item button class="ion-activatable" (click)="editar(tarea)">
+        <ion-row style="display: flex;
+        justify-content: center;
+        align-items: center;">
+          <ion-item class="normal" button class="ion-activatable" (click)="editar(tarea)">
             
             <p><ion-icon name="share-outline"></ion-icon> Editar</p>
           </ion-item>
@@ -77,7 +79,7 @@
 
 
     </ion-card>
-    
+  </div>
   
   </ion-card>
   

@@ -33,19 +33,19 @@
     font-family: 'Wix Madefor Display', sans-serif !important;
     font-size: 25px !important;
     font-weight: bold !important;
-    color: rgb(27, 24, 21) !important;
+   
 }
 
 .subtitulo {
     font-family: 'Wix Madefor Display', sans-serif !important;
     font-size: 19px !important;
     font-weight: bold !important;
-    color: rgb(17, 15, 12) !important;
+    
 }
 
 .normal {
     font-family: 'Wix Madefor Display', sans-serif !important;
-    color: rgb(27, 24, 21) !important;
+    
     font-size: 14px  !important;
 }
 
@@ -80,3 +80,8 @@
         url("/assets/fondo.png") no-repeat center center / cover;
         background: #000000;
     }
+    // Dark Mode - Custom Button Style
+.dark-mode-button {
+  --background: #343434;
+  --color: #ffffff;
+}
