@@ -24,20 +24,22 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" style.color="black">
-  <ion-card class="normal" style="background: black;">
+  <ion-card class="normal" style="background: linear-gradient(#121212, #ffffff);;" >
 
-    <h1 style="color: aliceblue !important;" class="subtitulo p-3 text-center encabezado">{{encabezado}}</h1>
+    <h1  class="subtitulo p-3 text-center encabezado">{{encabezado}}</h1>
   
-    <ion-card style="background: rgb(248, 246, 246);" *ngFor="let tarea of todoList" class="ion-margin">
-      <ion-card-deader>
-        <ion-card-subtittle [style.color]="tarea.tipoGasto === 'Fijo'? 'red': (tarea.tipoGasto === 'Variable'? 'green': 'orange')">
-          {{tarea.tipoGasto}}
+    <ion-card *ngFor="let tarea of todoList" class="ion-margin">
+      <div style=" text-align: center;"><ion-label class="subtitulo"  [style.color]="tarea.status === 'Completado'? '#72e776 !important' :'#ef3535 !important'">{{tarea.status}}</ion-label>
+      </div>
+        <ion-card-deader>
+        <ion-card-subtittle [style.color]="tarea.categoria === 'Fijo'? '#DC143C': (tarea.categoria === 'Variable'? 'green': (tarea.categoria === 'Esporadico'? 'orange': 'green'))">
+          {{tarea.categoria}}
         </ion-card-subtittle>
         <ion-item>
-          <ion-icon *ngIf="tarea.tipoGasto === 'Fijo'" color="danger" size="small" name="ellipse"></ion-icon>
-          <ion-icon *ngIf="tarea.tipoGasto === 'Variable'" color="success" size="small" name="ellipse"></ion-icon>
-          <ion-icon *ngIf="tarea.tipoGasto === 'Esporadico'" color="warning" size="small" name="ellipse"></ion-icon>
-          <ion-label>{{item.itemName}}</ion-label>
+          <ion-icon *ngIf="tarea.categoria === 'Fijo'" color="danger" size="small" name="ellipse"></ion-icon>
+          <ion-icon *ngIf="tarea.categoria === 'Variable'" color="success" size="small" name="ellipse"></ion-icon>
+          <ion-icon *ngIf="tarea.categoria === 'Esporadico'" color="warning" size="small" name="ellipse"></ion-icon>
+          <ion-label>{{tarea.descripcion}}</ion-label>
         </ion-item>
       </ion-card-deader>
 
@@ -48,33 +50,28 @@
               <ion-label class="subtitulo">Detalles</ion-label>
             </ion-item>
 
-            <div class="normal p-2" slot="content">tarea.tiopoGasto</div>
+            <div class="normal p-2" slot="content">{{tarea.tiopoGasto}}</div>
 
-            <div class="normal p-2" slot="content">tarea.monto</div>
+            <div class="normal p-2" slot="content">{{tarea.monto | number}} $RD</div>
           </ion-accordion>
           
-            <ion-accordion value="first">
-              <ion-item slot="header" color="light">
-                <ion-label>First Accordion</ion-label>
-              </ion-item>
-              <div class="ion-padding" slot="content">First Content</div>
-            </ion-accordion>
+          
           </ion-accordion-group>
-        <ion-label>Fecha: {{tarea.fecha | date:'fullDate' }}</ion-label>
+        <ion-label>Fecha: {{tarea.fecha |  date: 'EEEE, d MMMM y'  }}</ion-label>
       </ion-card-content>
 
         <ion-row>
-          <ion-item class="ion-activatable" (click)="onItemClick()">
+          <ion-item button class="ion-activatable" (click)="editar(tarea)">
             
-            <p><ion-icon name="share-outline"></ion-icon> Compartir</p>
+            <p><ion-icon name="share-outline"></ion-icon> Editar</p>
           </ion-item>
-          <ion-item class="ion-activatable" (click)="onItemClick()">
+          <ion-item button class="ion-activatable" (click)="eliminar(tarea)">
             
             <p><ion-icon name="checkmark-outline"></ion-icon> Completar</p>
           </ion-item>
-          <ion-item class="ion-activatable" (click)="onItemClick()">
+          <ion-item button class="ion-activatable" (click)="completar(tarea)">
             
-            <p><ion-icon name="trash-outline"></ion-icon> Cancelar</p>
+            <p><ion-icon name="trash-outline"></ion-icon> Elliminar</p>
           </ion-item>
         </ion-row>
 

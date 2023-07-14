@@ -5,6 +5,9 @@ import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { Tarea } from '../models';
 import * as moment from 'moment';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
+
 
 @Component({
   selector: 'app-presupuesto',
@@ -22,7 +25,7 @@ export class PresupuestoPage implements OnInit {
   newtarea: Tarea= {
     id: this.firestoreService.getid(),
     descripcion: '',
-    tipoGasto: '',
+    categoria: '',
     subcategoria: '',
     monto: 0,
     fecha: moment(new Date()).format('YYYY-MM-DD'),
@@ -42,18 +45,8 @@ private path= 'usuarios/'+this.uid+'/presupuesto/';
     public loadingController: LoadingController,
     public formBuilder: FormBuilder,
     public log: FirebaseauthService,) {
-     this.log.stateauth().subscribe( res=>{
-
-      if (res !== null){
-        this.fechaa();
-        this.uid= res.uid;
-
-      
-      }else {
-        this.uid='';
-        
-      }
-    });
+     
+   this.idusuario();
 
   }
 
@@ -65,10 +58,13 @@ private path= 'usuarios/'+this.uid+'/presupuesto/';
       monto: ['', [Validators.required, Validators.min(1)]],
     });
   }
-  addTask(){
+  completar(){
 
   }
-  onItemClick() {
+  eliminar() {
+    // Acciones a realizar cuando se hace clic en el elemento
+  }
+  editar() {
     // Acciones a realizar cuando se hace clic en el elemento
   }
 
@@ -152,6 +148,7 @@ fechaa() {
   
 }
 agregarTarea(){
+  console.log(this.path);
  if (this.myForm.valid){
   this.firestoreService.createdoc(this.newtarea,this.path,this.newtarea.id).then(res=>{
 this.limpiar();
@@ -166,13 +163,21 @@ this.presentToast('Accion realizada correctamente');
 
 
 
+
+
+}
+cargartodoList(){
+this.firestoreService.getcollection<Tarea>(this.path).subscribe(res=>{
+this.todoList = res;
+});
+
 }
 
 limpiar(){
   this.newtarea= {
     id: this.firestoreService.getid(),
     descripcion: '',
-    tipoGasto: '',
+    categoria: '',
     subcategoria: '',
     monto: 0,
     fecha: moment(new Date()).format('YYYY-MM-DD'),
@@ -180,5 +185,53 @@ limpiar(){
 
   };
  }
+ async idusuario(){ 
+  
+  let valor= true;
+  await this.log.stateauth().subscribe(res=>{
+    console.log(res);
+
+    if (res !== null){
+      
+      this.uid= res.uid;
+      
+      this.path='usuarios/'+this.uid+'/presupuesto';
+
+  
+     this.fechaa();
+     valor = true;
+   this.cargartodoList();
+    
+  }
+  else{this.alertaLogin();
+  valor = false;}
+  });
+  
+  return valor;
+  }
+  async alertaLogin() {
+    const alert = await this.alertController.create({
+      header: 'Alerta',
+      message: '¡Debes iniciar sesion para usar este modulo!',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Has cancelado la acción');
+          },
+        },
+        {
+          text: 'Ingresar',
+          handler: () => {
+            this.navCtrl.navigateRoot('/login');;
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
 
 }

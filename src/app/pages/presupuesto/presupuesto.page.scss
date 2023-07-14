@@ -1,6 +1,6 @@
 ion-content{
 
-    --background:#dee0e4;
+   // --background:#dee0e4;
 
     p{
         font-size: 16px;
@@ -23,15 +23,6 @@ $color-texto-oscuro: #fff;
 $color-fondo-claro: #f2f2f2;
 $color-texto-claro: #333;
 
-body {
-    background-color: $color-fondo-claro; // Establece el color de fondo por defecto para el tema claro
-  
-    // Verifica si se ha elegido el tema oscuro y actualiza el color de fondo y el color del texto en consecuencia
-    &.tema-oscuro {
-      background-color: $color-fondo-oscuro;
-      color: $color-texto-oscuro;
-    }
-  }
   ion-action-sheet.my-custom-class {
     --background: #f3fafc;
     --backdrop-opacity: 0.6;
