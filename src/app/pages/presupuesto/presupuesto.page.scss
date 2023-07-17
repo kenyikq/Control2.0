@@ -10,6 +10,9 @@ ion-content{
     }
 
 }
+.subrayado {
+  text-decoration: underline;
+}
 ion-item.ion-activatable {
     --highlight-color-focused: #ff0000; /* Color de resaltado al enfocar el elemento */
     --highlight-color-activated: #ff0000; /* Color de resaltado al activar el elemento */
@@ -32,4 +35,27 @@ $color-texto-claro: #333;
     --color: #1f1d1d;
     /* role: "destructive" button iOS styling override */
     --ion-color-danger: #494545;
+  }
+  .block {
+    
+    
+    align-items: center;
+    justify-content: center;
+  }
+
+  ion-modal {
+    --height: 80%;
+    --border-radius: 16px;
+    max-width: 500px;
+    --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  }
+  
+  ion-modal::part(backdrop) {
+    background: rgba(209, 213, 219);
+    opacity: 1;
+  }
+  
+  ion-modal ion-toolbar {
+    --background: rgb(14 116 144);
+    --color: white;
   }

@@ -68,9 +68,15 @@ getCollectionquery<tipo>(path: string, campo: string, condicion: any, valor: any
 
  }
 
- updatedoc(data: any, id:string, path:string){
-  const collection= this.database.collection(path)
-  return collection.doc(id).update(data);
+ async updateStatus(status: string, id:string, path:string){
+  let msj:any=""
+  const collection= await this.database.collection(path)
+  collection.doc(id).ref.update({
+    status: status
+  });
+  
+
+ 
 
  }
 

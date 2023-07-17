@@ -28,14 +28,26 @@
 
     <h1  class="subtitulo p-3 text-center encabezado">{{encabezado}}</h1>
   <div  >
+    <ion-segment #segment [scrollable]="true" (ionChange)="changeSegment($event)" style="max-width: 450px; margin-left: auto; margin-right: auto;" mode="ios"  [value]= segmentoSeleccion>
+      <ion-segment-button value="Todos">
+        <ion-label>Todos</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="Pendiente">
+        <ion-label>Pendientes</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="Completado">
+        <ion-label>Completados</ion-label>
+      </ion-segment-button>
+    </ion-segment>
     <ion-card *ngFor="let tarea of todoList" class="ion-margin" style="max-width: 450px; margin-left: auto; margin-right: auto;">
-      <div style=" text-align: center;"><ion-label class="subtitulo"  [style.color]="tarea.status === 'Completado'? '#72e776 !important' :'#ef3535 !important'">{{tarea.status}}</ion-label>
-      </div>
+      
         <ion-card-deader>
-        <ion-card-subtittle style="font-weight: 650;" class="normal" [style.color]="tarea.categoria === 'Fijo'? '#DC143C': (tarea.categoria === 'Variable'? 'green': (tarea.categoria === 'Esporadico'? 'orange': 'green'))">
-          {{tarea.categoria}}
+        <ion-card-subtittle >
+          <div style=" text-align: center;"><ion-label class="subtitulo"  [style.color]="tarea.status === 'Completado'? '#72e776 !important' :'#ef3535 !important'">{{tarea.status}}</ion-label>
+          </div>
         </ion-card-subtittle>
-        <ion-item>
+       
+        <ion-item class="normal">
           <ion-icon *ngIf="tarea.categoria === 'Fijo'" color="danger" size="small" name="ellipse"></ion-icon>
           <ion-icon *ngIf="tarea.categoria === 'Variable'" color="success" size="small" name="ellipse"></ion-icon>
           <ion-icon *ngIf="tarea.categoria === 'Esporadico'" color="warning" size="small" name="ellipse"></ion-icon>
@@ -47,9 +59,10 @@
         <ion-accordion-group>
           <ion-accordion value="first">
             <ion-item slot="header" color="light">
-              <ion-label style="font-weight: 600;">Detalles</ion-label>
+              <ion-label class="normal" style="font-weight: 600;">Detalles</ion-label>
             </ion-item>
-
+            <ion-label style="font-weight: 650;" class="normal" [style.color]="tarea.categoria === 'Fijo'? '#DC143C': (tarea.categoria === 'Variable'? 'green': (tarea.categoria === 'Esporadico'? 'orange': 'green'))">
+            {{tarea.categoria}}</ion-label>
             <div class="normal p-2" slot="content">Subcategoria: {{tarea.subcategoria}}</div>
             <div class="normal p-2" slot="content">Recurrencia: {{tarea.categoria}}</div>
             <div class="normal p-2" slot="content">Monto: {{tarea.monto | number}} $RD</div>
@@ -70,8 +83,8 @@
           </ion-item>
 
           <ion-item button class="ion-activatable" (click)="completar(tarea)">
-            
-            <p><ion-icon name="checkmark-outline"></ion-icon> Completar</p>
+            <p *ngIf="tarea.status=== 'Completado'"><ion-icon name="close-outline"></ion-icon> Deshacer</p>
+            <p *ngIf="tarea.status=== 'Pendiente'"><ion-icon name="checkmark-outline"></ion-icon> Completar</p>
           </ion-item>
 
           <ion-item button class="ion-activatable" (click)="eliminar(tarea)">
@@ -86,14 +99,15 @@
   
   </ion-card>
   
-  <div >
+ 
     
     
      
-      <ion-modal mode="ios" #modal  [canDismiss]="canDismiss" [presentingElement]="presentingElement">
+      <ion-modal mode="ios" #modal style="margin-right: auto; padding: 5%; margin: auto;"   >
        
-       <div >
+      
         <ng-template >
+          <ion-content>
           <ion-header>
             <ion-toolbar translucent> 
               <ion-button slot="end" fill="clear" (click)="modal.dismiss()">
@@ -105,17 +119,19 @@
             </ion-toolbar>
           </ion-header>
 
-          <ion-content >
-          <form style="margin-top: 25px;" [formGroup]="myForm" novalidate>
-            <ion-card style= " max-width: 400px; margin: auto;">
-           
+          
+          <form style="margin-top: 15px;" [formGroup]="myForm" novalidate>
+            <ion-card style= " max-width: 400px; margin: auto; padding: 2%;">
+           <ion-list style=" margin-top: 5px; margin: 2%;"> 
+
+
            
               <ion-item> 
                 
                 <label  class="nomal">Descripcion: </label>
-                <ion-input class="normal"  clearInput formControlName="descripcion"  required="true" [(ngModel)]="newtarea.descripcion" type="string" inputmode="text"></ion-input>
+                <ion-input class="normal" [ngClass]="{'subrayado': tarea.status === 'Completado'}"  clearInput formControlName="descripcion"  required="true" [(ngModel)]="newtarea.descripcion" type="string" inputmode="text"></ion-input>
               </ion-item>
-            
+              
            
               
               <ion-list class="normal" [ngModelOptions]="{standalone: true}">
@@ -178,6 +194,8 @@
               <label  class="nomal">Monto: </label>
               <ion-input label="Monto: " clearInput  formControlName="monto" required="true" [(ngModel)]="newtarea.monto" type="number" inputmode="number"></ion-input>
             </ion-item>
+
+
             <ion-row style=" margin: auto; padding: 10px">
               <ion-buttons  style=" margin: auto;" >
                 <ion-button style="width: 95px;" shape="round" fill="outline"  color= "danger"  (click)="modal.dismiss()">Cancelar</ion-button>
@@ -186,28 +204,52 @@
               </ion-buttons>
             </ion-row>
            
-
+           </ion-list>
           </ion-card>
+          
          
           </form>
            
-
-            
-          </ion-content>
+        </ion-content>
+       
         </ng-template>
-      </div> 
+        
+      
       </ion-modal>
     
-  </div>
+
 
  
-<ion-action-sheet mode="ios"
-  [isOpen]="isActionSheetOpen"
-  header="Elegir Quincena"
-  class="my-custom-class"
-  [buttons]="actionSheetButtons"
-  (didDismiss)="isActionSheetOpen = false"
-></ion-action-sheet>
+  <ion-modal #modal2 style=" height: auto; margin-right: auto; padding: 5%; margin: auto;
+  .ion-page {
+  position: relative;
+  contain: layout style;
+  height: auto;}" >
+    <ng-template>
+      <ion-content>
+        <ion-toolbar translucent> 
+          <ion-button slot="end" fill="clear" (click)="modal2.dismiss()">
+            
+            <ion-icon color ="danger"  slot="end" name="close"></ion-icon>
+          </ion-button>
+          <ion-title style="text-align: center;">Elegir Quincena</ion-title>
+          
+        </ion-toolbar>
+        
+        <ion-list style="padding: 5%; margin-top: 30px; margin: 5%;">
+          <ion-item >
+            <ion-checkbox justify="start"></ion-checkbox>
+            <label class="normal">Primera Quincena</label>
+          </ion-item>
+          <ion-item>
+            <ion-checkbox justify="start"></ion-checkbox>
+            <label class="normal">Segunda Quincena</label>
+          </ion-item>
+         
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 
 
  
@@ -216,7 +258,7 @@
 <ion-footer>
   <ion-toolbar><ion-tabs>
     <ion-tab-bar slot="bottom">
-      <ion-tab-button  style="color: #ffc107"  (click)="isActionSheetOpen = true">
+      <ion-tab-button  style="color: #ffc107"  (click)="modal2.present()">
         <ion-icon  name="calendar"></ion-icon>
         Quincena
       </ion-tab-button>

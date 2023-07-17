@@ -1,7 +1,7 @@
 
 import { Component, OnInit, ViewChild  } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { AlertController, IonSelect, LoadingController, ModalController, NavController, ToastController } from '@ionic/angular';
+import { AlertController, IonSelect, LoadingController, ModalController, NavController, ToastController, IonSegment } from '@ionic/angular';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { Tarea } from '../models';
@@ -21,9 +21,12 @@ export class PresupuestoPage implements OnInit {
   @ViewChild('selectcategoria') selectcategoria: IonSelect;
   @ViewChild('selectsubcategoria') selectsubcategoria: IonSelect;
   @ViewChild('modal') modal: any;
+  @ViewChild('segment') segment: IonSegment;
   todoList: Tarea[]=[];
+  datos: Tarea[]=[];
   canDismiss = true;
   isActionSheetOpen= false
+  segmentoSeleccion="Pendiente";
   tituloAgregarTarea="Nueva Tarea"
   presentingElement: any = null;
   date = moment(new Date()).format('YYYY-MM-DD');
@@ -66,16 +69,20 @@ private path= 'usuarios/'+this.uid+'/presupuesto/';
     this.limpiar();
   }
   completar(tarea:Tarea){
+    let statuschange ='';
+    if(tarea.status==='Completado'){
+      statuschange= 'Pendiente'
+    }
+    else{
+      statuschange= 'Completado'
+    }
     
-    this.firestoreService.updatedoc(tarea,this.path,tarea.id).then(res=>{
-      this.presentToast('Accion realizada correctamente.');
+    this.firestoreService.updateStatus(statuschange,tarea.id,this.path).then(res=>{
+      this.presentToast('Tarea Completada');
     })
 
   }
-  eliminar(tarea:Tarea) {
-    this.firestoreService.deletedoc(tarea.id,this.path);
-    this.presentToast('Tarea eliminada correctamente.');
-  }
+ 
   editar(tarea:Tarea) { 
     console.log(tarea);
     console.log(tarea.fecha);
@@ -88,11 +95,14 @@ private path= 'usuarios/'+this.uid+'/presupuesto/';
       this.selectsubcategoria.value=tarea.subcategoria;
     }, 1000);
    
-    
-     
-
   }
-
+  changeSegment(ev: any) {
+    
+    this.segmentoSeleccion = ev.detail.value;
+    
+    this.filtroStatus();
+       
+  }
   
 
   async presentToast(msg: string) {
@@ -194,15 +204,31 @@ this.presentToast('Accion realizada correctamente');
  console.log(this.myForm.errors)
  }
 
-
-
-
-
 }
+
 cargartodoList(){
 this.firestoreService.getcollection<Tarea>(this.path).subscribe(res=>{
 this.todoList = res;
+this.datos= res;
+this.filtroStatus();
 });
+
+}
+
+filtroStatus(status: string= this.segmentoSeleccion){
+
+  if  (status==="Todos"){
+    this.todoList=this.datos;
+    
+  }
+  else{
+    
+     this.todoList = this.datos.filter((tarea) => {
+     return tarea.status == status;
+    });
+    
+
+  }
 
 }
 
@@ -222,7 +248,7 @@ limpiar(){
   
   let valor= true;
   await this.log.stateauth().subscribe(res=>{
-    console.log(res);
+    
 
     if (res !== null){
       
@@ -234,6 +260,10 @@ limpiar(){
      this.fechaa();
      valor = true;
    this.cargartodoList();
+   setTimeout(() => {
+    this.filtroStatus();
+   }, 100);
+   
     
   }
   else{this.alertaLogin();
@@ -261,6 +291,33 @@ limpiar(){
             this.navCtrl.navigateRoot('/login');;
           },
         },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  async eliminar(tarea:Tarea) {
+    const alert = await this.alertController.create({
+      header: 'Alerta',
+      subHeader: 'Confirmacion',
+      message: 'Seguro que desea eliminar esta tarea?',
+      buttons: [{
+        text: 'Cancel',
+        role: 'cancel',
+        handler: () => {
+
+        },
+      },
+      {
+        text: 'Aceptar',
+        role: 'confirm',
+        handler: () => {
+          this.firestoreService.deletedoc(tarea.id,this.path);
+    this.presentToast('Tarea eliminada correctamente.');
+
+        },
+      },
       ],
     });
 
