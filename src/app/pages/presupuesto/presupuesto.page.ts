@@ -1,11 +1,12 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild  } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { AlertController, LoadingController, NavController, ToastController } from '@ionic/angular';
+import { AlertController, IonSelect, LoadingController, ModalController, NavController, ToastController } from '@ionic/angular';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { Tarea } from '../models';
 import * as moment from 'moment';
+import { set } from 'date-fns';
 
 
 
@@ -17,11 +18,13 @@ import * as moment from 'moment';
 })
 export class PresupuestoPage implements OnInit {
  
-
+  @ViewChild('selectcategoria') selectcategoria: IonSelect;
+  @ViewChild('selectsubcategoria') selectsubcategoria: IonSelect;
+  @ViewChild('modal') modal: any;
   todoList: Tarea[]=[];
   canDismiss = true;
   isActionSheetOpen= false
-
+  tituloAgregarTarea="Nueva Tarea"
   presentingElement: any = null;
   date = moment(new Date()).format('YYYY-MM-DD');
   newtarea: Tarea= {
@@ -57,17 +60,37 @@ private path= 'usuarios/'+this.uid+'/presupuesto/';
     this.myForm = this.formBuilder.group({
       descripcion: ['', Validators.required],
       subcategoria: ['', Validators.required],
+      categoria: ['', Validators.required],
       monto: ['', [Validators.required, Validators.min(1)]],
     });
+    this.limpiar();
   }
-  completar(){
+  completar(tarea:Tarea){
+    
+    this.firestoreService.updatedoc(tarea,this.path,tarea.id).then(res=>{
+      this.presentToast('Accion realizada correctamente.');
+    })
 
   }
-  eliminar() {
-    // Acciones a realizar cuando se hace clic en el elemento
+  eliminar(tarea:Tarea) {
+    this.firestoreService.deletedoc(tarea.id,this.path);
+    this.presentToast('Tarea eliminada correctamente.');
   }
-  editar() {
-    // Acciones a realizar cuando se hace clic en el elemento
+  editar(tarea:Tarea) { 
+    console.log(tarea);
+    console.log(tarea.fecha);
+    this.date=tarea.fecha;
+    this.tituloAgregarTarea="Actualizar Tarea";
+    this.newtarea= tarea;
+   
+    setTimeout(() => {
+      this.selectcategoria.value=tarea.categoria;
+      this.selectsubcategoria.value=tarea.subcategoria;
+    }, 1000);
+   
+    
+     
+
   }
 
   
@@ -144,6 +167,7 @@ public actionSheetButtons = [
 ];
 
 fechaa() {
+  
   this.newtarea.fecha= this.date
   const dia = moment(this.newtarea.fecha).format('D');
   const mes = moment(this.newtarea.fecha).locale('es').format('MMMM');
@@ -156,6 +180,10 @@ agregarTarea(){
  if (this.myForm.valid){
   this.firestoreService.createdoc(this.newtarea,this.path,this.newtarea.id).then(res=>{
 this.limpiar();
+
+  this.tituloAgregarTarea="Nueva Tarea"
+this.modal.dismiss();
+
 this.presentToast('Accion realizada correctamente');
   });
 
@@ -163,6 +191,7 @@ this.presentToast('Accion realizada correctamente');
 
  else{
   this.alerta("Debe llenar todos los campos");
+ console.log(this.myForm.errors)
  }
 
 

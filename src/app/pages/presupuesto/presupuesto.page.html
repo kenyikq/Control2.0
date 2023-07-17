@@ -63,15 +63,18 @@
         <ion-row style="display: flex;
         justify-content: center;
         align-items: center;">
-          <ion-item class="normal" button class="ion-activatable" (click)="editar(tarea)">
+
+          <ion-item class="normal" button class="ion-activatable" (click)=" editar(tarea); modal.present(); ">
             
             <p><ion-icon name="share-outline"></ion-icon> Editar</p>
           </ion-item>
-          <ion-item button class="ion-activatable" (click)="eliminar(tarea)">
+
+          <ion-item button class="ion-activatable" (click)="completar(tarea)">
             
             <p><ion-icon name="checkmark-outline"></ion-icon> Completar</p>
           </ion-item>
-          <ion-item button class="ion-activatable" (click)="completar(tarea)">
+
+          <ion-item button class="ion-activatable" (click)="eliminar(tarea)">
             
             <p><ion-icon name="trash-outline"></ion-icon> Elliminar</p>
           </ion-item>
@@ -88,34 +91,36 @@
     
      
       <ion-modal mode="ios" #modal  [canDismiss]="canDismiss" [presentingElement]="presentingElement">
-        <ng-template>
+       
+       <div >
+        <ng-template >
           <ion-header>
-            <ion-toolbar>
-              <ion-title>Nueva Tarea</ion-title>
-              <ion-buttons slot="end">
-                <ion-button (click)="modal.dismiss()">Close</ion-button>
-              </ion-buttons>
-              <ion-buttons slot="start">
-                <ion-button (click)="agregarTarea()">Agregar</ion-button>
-              </ion-buttons>
+            <ion-toolbar translucent> 
+              <ion-button slot="end" fill="clear" (click)="modal.dismiss()">
+                
+                <ion-icon color ="danger"  slot="end" name="close"></ion-icon>
+              </ion-button>
+              <ion-title>{{tituloAgregarTarea}}</ion-title>
+              
             </ion-toolbar>
           </ion-header>
 
-          <ion-content>
-          <form [formGroup]="myForm" novalidate>
-            <ion-card>
+          <ion-content >
+          <form style="margin-top: 25px;" [formGroup]="myForm" novalidate>
+            <ion-card style= " max-width: 400px; margin: auto;">
            
            
-              <ion-item>
-        
-                <ion-input label="Descripcion: " clearInput formControlName="descripcion"  required="true" [(ngModel)]="newtarea.descripcion" type="string" inputmode="text"></ion-input>
+              <ion-item> 
+                
+                <label  class="nomal">Descripcion: </label>
+                <ion-input class="normal"  clearInput formControlName="descripcion"  required="true" [(ngModel)]="newtarea.descripcion" type="string" inputmode="text"></ion-input>
               </ion-item>
             
            
               
-              <ion-list [ngModelOptions]="{standalone: true}">
+              <ion-list class="normal" [ngModelOptions]="{standalone: true}">
                 <ion-item id="open-modal2">
-                  <ion-label style="    margin-left: 3px;">Fecha:</ion-label>
+                  <ion-label class="normal" style="    margin-left: 3px;">Fecha:</ion-label>
                   <ion-note class="normal" slot="end">{{date}}</ion-note>
                 </ion-item>
                 <ion-modal trigger="open-modal2" [cssClass]="'bottom-end'">
@@ -135,30 +140,62 @@
 
             <ion-item>
 
-              <ion-label > 
+              <ion-label class="normal" > 
+                Recurrencia:
+               </ion-label>
+              <ion-select #selectcategoria id="categoria" class="normal" clearInput="true"  formControlName="categoria"  required="true" mode="ios" label="categoria: "  interface="popover"  [(ngModel)]= "newtarea.categoria" placeholder="Seleccionar">
+                <ion-select-option  value="Fijo">Fijo</ion-select-option>
+                <ion-select-option  value="Variable">Variable</ion-select-option>
+                <ion-select-option  value="Esporadico">Esporadico</ion-select-option>
+                
+ 
+              </ion-select>
+            </ion-item>
+
+            <ion-item>
+
+              <ion-label class="normal" > 
                 Subcategoria:
                </ion-label>
-              <ion-select  clearInput="true"  formControlName="subcategoria"  required="true" mode="ios" label="Subcategoria:" aria-label="Fruit" interface="popover" value="newtarea.subcategoria" [(ngModel)]= "newtarea.subcategoria" placeholder="Seleccionar">
-                <ion-select-option  value="Sueldo">Sueldo</ion-select-option>
-                <ion-select-option  value="Regalo">Regalo</ion-select-option>
-                <ion-select-option  value="Compra">Compra</ion-select-option>
+              <ion-select #selectsubcategoria id="selectsubcategoria" class="normal" clearInput="true"  formControlName="subcategoria"  required="true" mode="ios" label="Subcategoria:"  interface="popover" [(ngModel)]= "newtarea.subcategoria" placeholder="Seleccionar">
+                <ion-select-option  value="Ahorro">Ahorro</ion-select-option>
                 <ion-select-option  value="Combustible">Combustible</ion-select-option>
-                <ion-select-option  value="Comida">Comida</ion-select-option>
+                <ion-select-option  value="Alimentos">Alimentos</ion-select-option>
+                <ion-select-option  value="Prestamo">Prestamo</ion-select-option>
+                <ion-select-option  value="Deudas">Deudas</ion-select-option>
+                <ion-select-option  value="Diezmo">Diezmo</ion-select-option>
+                <ion-select-option  value="Emely">Emely</ion-select-option>
+                <ion-select-option  value="Entretenimiento">Entretenimiento</ion-select-option>
+                <ion-select-option  value="Comunicaciones">Comunicaciones</ion-select-option>
+                <ion-select-option  value="Kenyi">Kenyi</ion-select-option>
+                <ion-select-option  value="Luz Electrica">Luz electrica</ion-select-option>
+                <ion-select-option  value="Motor">Motor</ion-select-option>
+                <ion-select-option  value="Otros">Otros</ion-select-option>
+ 
               </ion-select>
             </ion-item>
             <ion-item>
-        
+              <label  class="nomal">Monto: </label>
               <ion-input label="Monto: " clearInput  formControlName="monto" required="true" [(ngModel)]="newtarea.monto" type="number" inputmode="number"></ion-input>
             </ion-item>
+            <ion-row style=" margin: auto; padding: 10px">
+              <ion-buttons  style=" margin: auto;" >
+                <ion-button style="width: 95px;" shape="round" fill="outline"  color= "danger"  (click)="modal.dismiss()">Cancelar</ion-button>
+              
+                <ion-button style="width: 95px; margin-left: 10px;" shape="round" fill="solid"   color= "primary" (click)="agregarTarea()">Agregar</ion-button>
+              </ion-buttons>
+            </ion-row>
+           
 
           </ion-card>
-            
+         
           </form>
            
 
             
           </ion-content>
         </ng-template>
+      </div> 
       </ion-modal>
     
   </div>
@@ -179,14 +216,14 @@
 <ion-footer>
   <ion-toolbar><ion-tabs>
     <ion-tab-bar slot="bottom">
-      <ion-tab-button (click)="isActionSheetOpen = true">
-        <ion-icon name="calendar"></ion-icon>
+      <ion-tab-button  style="color: #ffc107"  (click)="isActionSheetOpen = true">
+        <ion-icon  name="calendar"></ion-icon>
         Quincena
       </ion-tab-button>
       
 
-      <ion-tab-button  (click)="modal.present()" >
-        <ion-icon name="add-circle"></ion-icon>
+      <ion-tab-button  style="color: #ffc107"  (click)="limpiar();modal.present(); " >
+        <ion-icon  name="add-circle"></ion-icon>
         Agregar Nueva
       </ion-tab-button>
     </ion-tab-bar>
