@@ -84,14 +84,14 @@
   </ion-list>
 
       <ion-item>
-        
+        <ion-label>Concepto: </ion-label>
         <ion-input label="Concepto" clearInput [ngModelOptions]="{standalone: true}" required="true" [(ngModel)]="newRegistro.concepto" type="string" inputmode="text"></ion-input>
       </ion-item>
 
    
 
       <ion-item>  
-       
+        <ion-label>Monto: </ion-label>
         <ion-input clearInput="true"  formControlName="monto"  required="true" label="Monto:" type="number" inputmode="numeric" [(ngModel)]="newRegistro.monto"></ion-input>
 
       
@@ -117,10 +117,10 @@
 
   <ion-content *ngIf="status=== 'visualizando'" class="normal">
     
-    <h2 style="margin-bottom: 15px;" class="subtitulo text-center ">Historico de Movimientos</h2>
+    <h2 style="margin-bottom: 15px; color: aliceblue;" class="subtitulo text-center ">Historico de Movimientos</h2>
     <!---Tabla de transacciones-->
 <div   class="m-3">
-  <ion-segment [scrollable]="true" (ionChange)="changeSegment($event)" value="Todos" mode="ios" >
+  <ion-segment style="background: #ffc107;" [scrollable]="true" (ionChange)="changeSegment($event)" value="Todos" mode="ios" >
     <ion-segment-button value="Todos">
       <ion-label class="normal" >Todos</ion-label>
     </ion-segment-button>  
@@ -138,8 +138,8 @@
     
 
    <ion-card style="margin: 2%">
-<div style="margin-left: calc(90% - 100px); "><ion-list>
-      <ion-item>
+<div style="margin-left: calc(90% - 100px);  "><ion-list>
+      <ion-item style="height: 35px;">
         <ion-select 
         placeholder="Filtrar Mes"
         mode="ios"

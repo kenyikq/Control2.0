@@ -83,6 +83,7 @@ export interface Usuario{
         subcategoria: string;
         monto: number;
         fecha: string;
+        quincena: string;
         status: string
 
     }

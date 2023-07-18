@@ -24,11 +24,12 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" style.color="black" >
+
   <ion-card class="normal" style="background: linear-gradient(#121212, #ffffff);" >
 
-    <h1  class="subtitulo p-3 text-center encabezado">{{encabezado}}</h1>
+    <h1 style="text-shadow: 2px 2px 1px rgba(0, 0, 0, 0.5);" class=" subtitulo p-3 text-center encabezado">{{encabezado}}</h1>
   <div  >
-    <ion-segment #segment [scrollable]="true" (ionChange)="changeSegment($event)" style="max-width: 450px; margin-left: auto; margin-right: auto;" mode="ios"  [value]= segmentoSeleccion>
+    <ion-segment #segment [scrollable]="true" (ionChange)="changeSegment($event)" style="max-width: 400px; margin-left: auto; margin-right: auto;" mode="ios"  [value]= segmentoSeleccion>
       <ion-segment-button value="Todos">
         <ion-label>Todos</ion-label>
       </ion-segment-button>
@@ -39,11 +40,11 @@
         <ion-label>Completados</ion-label>
       </ion-segment-button>
     </ion-segment>
-    <ion-card *ngFor="let tarea of todoList" class="ion-margin" style="max-width: 450px; margin-left: auto; margin-right: auto;">
+    <ion-card *ngFor="let tarea of todoList" class="ion-margin" style="max-width: 350px; margin-left: auto; margin-right: auto;">
       
         <ion-card-deader>
         <ion-card-subtittle >
-          <div style=" text-align: center;"><ion-label class="subtitulo"  [style.color]="tarea.status === 'Completado'? '#72e776 !important' :'#ef3535 !important'">{{tarea.status}}</ion-label>
+          <div style=" text-align: center;margin-left: -41px;"><ion-label class="subtitulo"  [style.color]="tarea.status === 'Completado'? '#72e776 !important' :'#ef3535 !important'">{{tarea.status}}</ion-label>
           </div>
         </ion-card-subtittle>
        
@@ -51,21 +52,24 @@
           <ion-icon *ngIf="tarea.categoria === 'Fijo'" color="danger" size="small" name="ellipse"></ion-icon>
           <ion-icon *ngIf="tarea.categoria === 'Variable'" color="success" size="small" name="ellipse"></ion-icon>
           <ion-icon *ngIf="tarea.categoria === 'Esporadico'" color="warning" size="small" name="ellipse"></ion-icon>
-          <ion-label class="subtitulo">{{tarea.descripcion}}</ion-label>
+          <ion-label style="text-align: center; margin-left: -61px;" class="subtitulo">{{tarea.descripcion}}</ion-label>
         </ion-item>
       </ion-card-deader>
 
-      <ion-card-content class="normal">
+      <ion-card-content style="text-align: center;" class="normal">
         <ion-accordion-group>
           <ion-accordion value="first">
             <ion-item slot="header" color="light">
-              <ion-label class="normal" style="font-weight: 600;">Detalles</ion-label>
+              <ion-label class="normal" style="font-weight: 600;
+              text-align: center;
+              font-size: 18px !important;">Detalles</ion-label>
             </ion-item>
             <ion-label style="font-weight: 650;" class="normal" [style.color]="tarea.categoria === 'Fijo'? '#DC143C': (tarea.categoria === 'Variable'? 'green': (tarea.categoria === 'Esporadico'? 'orange': 'green'))">
             {{tarea.categoria}}</ion-label>
-            <div class="normal p-2" slot="content">Subcategoria: {{tarea.subcategoria}}</div>
-            <div class="normal p-2" slot="content">Recurrencia: {{tarea.categoria}}</div>
-            <div class="normal p-2" slot="content">Monto: {{tarea.monto | number}} $RD</div>
+            <div class="normal p-1" slot="content"><ion-label style="font-weight: 700;">Subcategoria: </ion-label>{{tarea.subcategoria}}</div>
+            <div class="normal p-1" slot="content"><ion-label style="font-weight: 700;">Recurrencia: </ion-label> {{tarea.categoria}}</div>
+            <div class="normal p-1" slot="content"><ion-label style="font-weight: 700;">Quincena: </ion-label> {{tarea.quincena}}</div>
+            <div class="normal p-1" slot="content"><ion-label style="font-weight: 700;">Monto: </ion-label> {{tarea.monto | number}} $RD</div>
           </ion-accordion>
           
           
@@ -77,19 +81,23 @@
         justify-content: center;
         align-items: center;">
 
-          <ion-item class="normal" button class="ion-activatable" (click)=" editar(tarea); modal.present(); ">
-            
-            <p><ion-icon name="share-outline"></ion-icon> Editar</p>
-          </ion-item>
+        
 
-          <ion-item button class="ion-activatable" (click)="completar(tarea)">
-            <p *ngIf="tarea.status=== 'Completado'"><ion-icon name="close-outline"></ion-icon> Deshacer</p>
-            <p *ngIf="tarea.status=== 'Pendiente'"><ion-icon name="checkmark-outline"></ion-icon> Completar</p>
+<ion-item button class="ion-activatable" (click)="edit(tarea); modal.present()">
+            
+  <p><ion-icon name="pencilcreate-outline"></ion-icon> Editar</p>
+</ion-item>
+
+          <ion-item *ngIf="tarea.status=== 'Completado'" button class="ion-activatable" (click)="completar(tarea); tarea.status='Pendiente'">
+            <p ><ion-icon name="close-outline"></ion-icon> Deshacer</p>
+          </ion-item>
+          <ion-item *ngIf="tarea.status=== 'Pendiente'" button class="ion-activatable" (click)="completar(tarea); tarea.status='Completado'">
+            <p><ion-icon name="checkmark-outline"></ion-icon> Completar</p>
           </ion-item>
 
           <ion-item button class="ion-activatable" (click)="eliminar(tarea)">
             
-            <p><ion-icon name="trash-outline"></ion-icon> Elliminar</p>
+            <p><ion-icon name="trash-outline"></ion-icon> Eliminar</p>
           </ion-item>
         </ion-row>
 
@@ -128,18 +136,18 @@
            
               <ion-item> 
                 
-                <label  class="nomal">Descripcion: </label>
-                <ion-input class="normal" [ngClass]="{'subrayado': tarea.status === 'Completado'}"  clearInput formControlName="descripcion"  required="true" [(ngModel)]="newtarea.descripcion" type="string" inputmode="text"></ion-input>
+                <label style="font-weight: 600;" class="nomal">Descripcion: </label>
+                <ion-input class="normal"   clearInput formControlName="descripcion"  required="true" [(ngModel)]="newtarea.descripcion" type="string" inputmode="text"></ion-input>
               </ion-item>
               
            
               
               <ion-list class="normal" [ngModelOptions]="{standalone: true}">
                 <ion-item id="open-modal2">
-                  <ion-label class="normal" style="    margin-left: 3px;">Fecha:</ion-label>
+                  <ion-label class="normal " style="   font-weight: 600; margin-left: 3px;">Fecha:</ion-label>
                   <ion-note class="normal" slot="end">{{date}}</ion-note>
                 </ion-item>
-                <ion-modal trigger="open-modal2" [cssClass]="'bottom-end'">
+                <ion-modal trigger="open-modal2" [cssClass]="'bottom-end'"  (willDismiss)="onWillDismiss($event)">
                   <ng-template>
                     
                     <ion-datetime [ngModelOptions]="{standalone: true}"
@@ -153,10 +161,21 @@
                     ></ion-datetime>
                   </ng-template> </ion-modal >
             </ion-list>
+            <ion-item>
+            <ion-label style="font-weight: 600;" class="normal " > 
+              Quincena:
+             </ion-label>
+            <ion-select  id="quincena" class="normal" clearInput="true"  formControlName="quincena"  required="true" mode="ios" label="quincena:"  interface="popover" [(ngModel)]= "newtarea.quincena" placeholder="Seleccionar">
+              <ion-select-option  value="Primera">Primera Quincena</ion-select-option>
+              <ion-select-option  value="Segunda">Segunda Quincena</ion-select-option>
+          
+
+            </ion-select>
+          </ion-item>
 
             <ion-item>
 
-              <ion-label class="normal" > 
+              <ion-label style="font-weight: 600;" class="normal " > 
                 Recurrencia:
                </ion-label>
               <ion-select #selectcategoria id="categoria" class="normal" clearInput="true"  formControlName="categoria"  required="true" mode="ios" label="categoria: "  interface="popover"  [(ngModel)]= "newtarea.categoria" placeholder="Seleccionar">
@@ -170,7 +189,7 @@
 
             <ion-item>
 
-              <ion-label class="normal" > 
+              <ion-label style="font-weight: 600;" class="normal " > 
                 Subcategoria:
                </ion-label>
               <ion-select #selectsubcategoria id="selectsubcategoria" class="normal" clearInput="true"  formControlName="subcategoria"  required="true" mode="ios" label="Subcategoria:"  interface="popover" [(ngModel)]= "newtarea.subcategoria" placeholder="Seleccionar">
@@ -191,8 +210,8 @@
               </ion-select>
             </ion-item>
             <ion-item>
-              <label  class="nomal">Monto: </label>
-              <ion-input label="Monto: " clearInput  formControlName="monto" required="true" [(ngModel)]="newtarea.monto" type="number" inputmode="number"></ion-input>
+              <label  style="font-weight: 600;" class="nomal ">Monto: </label>
+              <ion-input label="Monto: " clearInput  formControlName="monto" required="true"  [(ngModel)]="newtarea.monto " type="number" inputmode="number"></ion-input>
             </ion-item>
 
 
@@ -232,18 +251,18 @@
             
             <ion-icon color ="danger"  slot="end" name="close"></ion-icon>
           </ion-button>
-          <ion-title style="text-align: center;">Elegir Quincena</ion-title>
+          <ion-title style="text-align: center; font-weight: bold;">Elegir Quincena</ion-title>
           
         </ion-toolbar>
         
         <ion-list style="padding: 5%; margin-top: 30px; margin: 5%;">
           <ion-item >
-            <ion-checkbox justify="start"></ion-checkbox>
-            <label class="normal">Primera Quincena</label>
+            <ion-checkbox mode="ios" #check1 [(checked)]="valorcheck1" (ionChange)="onChange($event)" justify="start"></ion-checkbox>
+            <label style="margin-left: 5px" class="normal">  Primera Quincena</label>
           </ion-item>
           <ion-item>
-            <ion-checkbox justify="start"></ion-checkbox>
-            <label class="normal">Segunda Quincena</label>
+            <ion-checkbox mode="ios" #check2 [(checked)]="valorcheck2" (ionChange)="onChange2($event)" justify="start"></ion-checkbox>
+            <label style="margin-left: 5px" class="normal">  Segunda Quincena</label>
           </ion-item>
          
         </ion-list>

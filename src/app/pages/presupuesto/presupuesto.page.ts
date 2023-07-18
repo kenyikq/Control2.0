@@ -1,7 +1,8 @@
+import { Subscription } from 'rxjs';
 
 import { Component, OnInit, ViewChild  } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { AlertController, IonSelect, LoadingController, ModalController, NavController, ToastController, IonSegment } from '@ionic/angular';
+import { AlertController, IonSelect, LoadingController, ModalController, NavController, ToastController, IonSegment, IonCheckbox } from '@ionic/angular';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { Tarea } from '../models';
@@ -21,10 +22,14 @@ export class PresupuestoPage implements OnInit {
   @ViewChild('selectcategoria') selectcategoria: IonSelect;
   @ViewChild('selectsubcategoria') selectsubcategoria: IonSelect;
   @ViewChild('modal') modal: any;
-  @ViewChild('segment') segment: IonSegment;
+  @ViewChild('modal2') modal2: any;
+  @ViewChild('check1') check1: IonCheckbox;
+  @ViewChild('check2') check2: IonCheckbox;
+  
   todoList: Tarea[]=[];
   datos: Tarea[]=[];
-  canDismiss = true;
+  valorcheck1 = false;
+  valorcheck2 = false;
   isActionSheetOpen= false
   segmentoSeleccion="Pendiente";
   tituloAgregarTarea="Nueva Tarea"
@@ -37,6 +42,7 @@ export class PresupuestoPage implements OnInit {
     subcategoria: '',
     monto: 0,
     fecha: moment(new Date()).format('YYYY-MM-DD'),
+    quincena:'',
     status: 'Pendiente'
 
   };
@@ -62,6 +68,7 @@ private path= 'usuarios/'+this.uid+'/presupuesto/';
     this.presentingElement = document.querySelector('.ion-page');
     this.myForm = this.formBuilder.group({
       descripcion: ['', Validators.required],
+      quincena: ['', Validators.required],
       subcategoria: ['', Validators.required],
       categoria: ['', Validators.required],
       monto: ['', [Validators.required, Validators.min(1)]],
@@ -69,22 +76,29 @@ private path= 'usuarios/'+this.uid+'/presupuesto/';
     this.limpiar();
   }
   completar(tarea:Tarea){
-    let statuschange ='';
+    let statuschange =''; 
+    let msj='';
     if(tarea.status==='Completado'){
-      statuschange= 'Pendiente'
+      statuschange= 'Pendiente';
+      msj='Tarea Deshecha';
     }
     else{
-      statuschange= 'Completado'
+      statuschange= 'Completado';
+      msj='Tarea Completada';
     }
     
     this.firestoreService.updateStatus(statuschange,tarea.id,this.path).then(res=>{
-      this.presentToast('Tarea Completada');
+      this.presentToast(msj);
     })
 
   }
+
+  prueba(){
+    console.log('prueba');
+  }
  
-  editar(tarea:Tarea) { 
-    console.log(tarea);
+  edit(tarea:Tarea) { 
+   
     console.log(tarea.fecha);
     this.date=tarea.fecha;
     this.tituloAgregarTarea="Actualizar Tarea";
@@ -180,9 +194,9 @@ fechaa() {
   
   this.newtarea.fecha= this.date
   const dia = moment(this.newtarea.fecha).format('D');
-  const mes = moment(this.newtarea.fecha).locale('es').format('MMMM');
-  
+  const mes = moment(this.newtarea.fecha).locale('es').format('MMMM');  
  const anio = moment(this.newtarea.fecha).format('yyyy');
+
   
 }
 agregarTarea(){
@@ -207,11 +221,12 @@ this.presentToast('Accion realizada correctamente');
 }
 
 cargartodoList(){
-this.firestoreService.getcollection<Tarea>(this.path).subscribe(res=>{
+ this.firestoreService.getcollection<Tarea>(this.path).subscribe(res=>{
 this.todoList = res;
 this.datos= res;
 this.filtroStatus();
 });
+
 
 }
 
@@ -240,6 +255,7 @@ limpiar(){
     subcategoria: '',
     monto: 0,
     fecha: moment(new Date()).format('YYYY-MM-DD'),
+    quincena:'',
     status: 'Pendiente'
 
   };
@@ -259,10 +275,11 @@ limpiar(){
   
      this.fechaa();
      valor = true;
-   this.cargartodoList();
+  
    setTimeout(() => {
+    this.determinarquicena();
     this.filtroStatus();
-   }, 100);
+   }, 200);
    
     
   }
@@ -323,5 +340,86 @@ limpiar(){
 
     await alert.present();
   }
+
+   async onChange(ev: any) {
+    if(ev!== null && ev.detail.checked===true){
+      
+      this.check1.checked= false;
+     
+    }
+
+    else{
+    
+    setTimeout(() => {
+      this.valorcheck1=true;
+      this.valorcheck2=false;
+    }, 10);
+    
+  }
+      
+      
+
+      this.firestoreService.getCollectionquery<Tarea>(this.path,'quincena','==','Primera').subscribe( res=>{
+        this.datos=res;
+        this.todoList=res;
+        this.encabezado='Presupuesto Para Primera Quincena';
+        this.filtroStatus();
+      });
+    
+    
+    this.modal2.dismiss();
+  }
+
+   async onChange2(ev: any) {
+    
+    if(ev!== null && ev.detail.checked===true){
+      
+      this.check2.checked= false;
+     
+    }
+
+    else{
+      setTimeout(() => {
+    
+        this.valorcheck2=true;
+          this.valorcheck1=false;
+          this.encabezado='Presupuesto Para Segunda Quincena';
+       }, 10);
+
+    }
+   
+    
+      
+      this.firestoreService.getCollectionquery<Tarea>(this.path,'quincena','==','Segunda').subscribe( res=>{
+        this.encabezado='Presupuesto Para Segunda Quincena';
+        this.datos=res;
+        this.todoList=res;
+        this.filtroStatus();
+      });
+    
+
+   
+    this.modal2.dismiss();
+  }
+  determinarquicena(){
+    const fechaActual = new Date();
+    const diaActual = fechaActual.getDate();
+
+    if (diaActual >= 13 && diaActual <= 25) {
+      
+      this.onChange(null);
+      
+      
+    } else {
+     
+      this.onChange2(null);
+    }
+  
+  }
+  onWillDismiss(ev: any){
+    console.log(ev);
+
+  }
+ 
 
 }
