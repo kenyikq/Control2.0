@@ -45,7 +45,7 @@
     </div>
 
     <ion-card-content >
-      <canvas #barChart style="position: relative; height:20vh; width:40vw"></canvas>
+      <canvas #barChart style="max-height: 261px; position: relative;  width:40vw"></canvas>
     </ion-card-content>
  
 
@@ -66,13 +66,32 @@
     </ion-segment>
   </div>
 
-  <ion-card-content style="text-align: center;" >
-    <canvas #doughnutChart style="position: relative; height:20vh; width:50vw"></canvas>
+  <ion-card-content style="text-align: center; align-items: center;" >
+    <canvas #doughnutChart style="position: relative; max-height: 258px;  width:50vw"></canvas>
   <ion-chip style="    margin-top: 5px;" class="subtitulo">Total: {{totales.gastos.toFixed(0) | number}} RD$</ion-chip>
   </ion-card-content>
 
 
 </ion-card>
+
+
+<ion-card>
+  <h2 class="subtitulo" style="text-align: center;">Control de Deudas</h2>
+
+  <div style="margin-right: 5% ;margin-left: 5%;">
+   
+   
+  </div>
+
+  <ion-card-content >
+    <canvas #barChartDeudas style="max-height: 261px; position: relative;  width:40vw"></canvas>
+    
+  </ion-card-content>
+
+
+</ion-card>
+
+
 
 
 

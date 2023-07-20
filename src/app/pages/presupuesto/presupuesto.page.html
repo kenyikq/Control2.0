@@ -27,7 +27,7 @@
 
   <ion-card class="normal" style="background: linear-gradient(#121212, #ffffff);" >
 
-    <h1 style="text-shadow: 2px 2px 1px rgba(0, 0, 0, 0.5);" class=" subtitulo p-3 text-center encabezado">{{encabezado}}</h1>
+    <h1 style="text-shadow: 2px 2px 1px rgba(0, 0, 0, 0.5); color: white;" class=" subtitulo p-3 text-center encabezado">{{encabezado}}</h1>
   <div  >
     <ion-segment #segment [scrollable]="true" (ionChange)="changeSegment($event)" style="max-width: 400px; margin-left: auto; margin-right: auto;" mode="ios"  [value]= segmentoSeleccion>
       <ion-segment-button value="Todos">
@@ -115,7 +115,7 @@
        
       
         <ng-template >
-          <ion-content>
+          <ion-content style="--background: #fff;">
           <ion-header>
             <ion-toolbar translucent> 
               <ion-button slot="end" fill="clear" (click)="modal.dismiss()">
@@ -245,7 +245,7 @@
   contain: layout style;
   height: auto;}" >
     <ng-template>
-      <ion-content>
+      <ion-content style="--background: #fff;">
         <ion-toolbar translucent> 
           <ion-button slot="end" fill="clear" (click)="modal2.dismiss()">
             

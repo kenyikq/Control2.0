@@ -1,7 +1,7 @@
 {
-  "name": "Control Personal",
-  "short_name": "Control Personal",
-  "theme_color": "#1976d2",
+  "name": "app",
+  "short_name": "app",
+  "theme_color": "#dee2e6",
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "./",

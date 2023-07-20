@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { FirebaseauthService } from './../../services/firebaseauth.service';
+import { Component, OnInit, ViewChild  } from '@angular/core';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import * as moment from 'moment';
 import { convertToParamMap } from '@angular/router';
-import { ActionSheetController,AlertController,LoadingController, NavController, ToastController  } from '@ionic/angular';
+import { ActionSheetController,AlertController,IonInput,IonSelect,LoadingController, NavController, ToastController  } from '@ionic/angular';
 import { Deuda, Pago } from '../models';
-import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { take } from 'rxjs';
+
 
 @Component({
   selector: 'app-deudas',
@@ -13,15 +15,28 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
   styleUrls: ['./deudas.page.scss'],
 })
 export class DeudasPage implements OnInit {
-
+  
+  @ViewChild('modal') modal: any;
+  @ViewChild('montoAPagar') montoAPagar: IonInput;
+  @ViewChild('selecTipoPago') selecTipoPago: IonSelect;
+  
+  saldo=0;
+  montoPendiente=0;
   deudas:Deuda[]=[];
-  pago:Pago[]=[];
+  pago:Pago={id:this.firestoreservice.getid(),
+    fechaCreacion: new Date (),
+    fechaPago: new Date() ,
+    TipoPago: '',
+    pago: 0,
+    montoPendiente:0};
   private myForm: FormGroup;
+  private formPago: FormGroup;
   status ='visualizando';
   uid='';
   private path= 'usuarios/'+this.uid+'/deudas/';
+  private pathPago='';
   loading:any;
-  mesSeleccion: string[] =[moment(new Date()).locale('es').format('MMMM')];
+  mesSeleccion =moment(new Date()).locale('es').format('MMMM');
   segmentoSeleccion='Todos';
 
 
@@ -43,6 +58,11 @@ export class DeudasPage implements OnInit {
         categoria: ['', Validators.required],
         subcategoria: ['', Validators.required],
         monto: ['', [Validators.required, Validators.min(1)]],
+      });
+
+      this.formPago=this.formBuilder.group({
+        tipoP: ['', Validators.required],
+        montoP: ['', [Validators.required, Validators.min(1)]],
       });
     }
 
@@ -96,7 +116,77 @@ async guardardatos(){
   }
 
 
+  determinarTipoPago(){
+    console.log (this.selecTipoPago.value);
+    if(this.selecTipoPago.value==='Saldo'){
+      this.pago.TipoPago=this.selecTipoPago.value;
+      this.pago.pago= this.saldo;
+      this.montoPendiente=0;
+      this.montoAPagar.disabled = true;
+    }
+    else{
+      this.pago.TipoPago=this.selecTipoPago.value;
+      this.montoAPagar.disabled = false;
+      
+      this.montoAPagar.value=null;
+      this.montoAPagar.setFocus();
+      
+    }
+  }
 
+ async aplicarPago(){
+
+ 
+
+    if(this.formPago.valid){
+      if  (this.pago.montoPendiente===0){
+        this.firestoreservice.updateStatus('Saldado',this.newDeuda.id,this.path);
+      }
+  this.firestoreservice.createdoc(this.pago,this.pathPago,this.pago.id).then(res=>{
+    if (res!==null){
+this.presentToast('Pago aplicado Correctamente');
+      this.pago ={id:this.firestoreservice.getid(),
+        fechaCreacion: new Date(),
+        fechaPago: new Date() ,
+        TipoPago: 'Abono',
+        pago: 0,
+        montoPendiente:0};
+    }
+  });
+
+
+     
+    }
+    else{
+      this.alerta('Favor llenar todos los campos');
+    }
+
+
+  }
+
+
+async mostrarforPago(deuda:Deuda){
+  this.pathPago='usuarios/'+this.uid+'/deudas/'+deuda.id+'/pagos/';
+  
+ let ultimoPago = await this.firestoreservice.getultimopago<Pago>(this.pathPago) ;
+console.log(ultimoPago.montoPendiente);
+
+  if(ultimoPago.montoPendiente=== undefined){
+    
+    this.saldo=deuda.monto;
+  }
+
+  else{
+    this.saldo=ultimoPago.montoPendiente;
+
+  }
+  this.newDeuda= deuda;
+  
+  
+  this.modal.present();
+  
+  
+}
   
 
   async presentActionSheet(deuda:Deuda) {
@@ -135,7 +225,7 @@ async guardardatos(){
           },
           icon:'wallet-outline',
           handler: ()=>{ 
-            this.paraeditar(deuda);
+            this.mostrarforPago(deuda);
           },
         },
 
@@ -203,6 +293,16 @@ async guardardatos(){
     await alert.present();
   }
 
+  onInputChanged(event: any) {
+    const textoIngresado = event.target.value;
+    if  (event.target.value===null|| event.target.value===0){this.montoPendiente=this.saldo}
+    this.montoPendiente = this.saldo-textoIngresado;
+
+    if(this.montoPendiente < 0 ){
+      this.alerta('El monto ingresado es mayor que el monto pendiente');
+    }
+  }
+
 
 nuevodeuda(){
   this.newDeuda= {
@@ -251,23 +351,33 @@ cancelar(){
   this.nuevodeuda();
   this.status='visualizando';
 }
+
+
+
+
 paraeditar(deuda: Deuda){
+  
   this.status='editando';
   this.newDeuda= deuda;
   this.date= this.newDeuda.fecha;
 }
 
 async idusuario(){ 
+  
   let valor= true;
   await this.log.stateauth().subscribe(res=>{
-  if(res){
-    console.log(res);
-    this.log.getUid().then(resp=>{
-     this.path='usuarios/'+this.log.Uid+'/deudas';
+
+    if (res !== null){
+      
+      this.uid= res.uid;
+      
+      this.path='usuarios/'+this.uid+'/deudas';
+
+  
      this.fechaa();
-    // this.filtroMes();
+     this.cargarDeudas();
      valor = true;
-    }).catch(err=>{console.log(err);});
+   
     
   }
   else{this.alertaLogin();
@@ -276,28 +386,26 @@ async idusuario(){
   
   return valor;
   }
+
+
   changeSegment(ev: any) {
     this.segmentoSeleccion = ev.detail.value;}
 
-  async filtroMes(){
-    let listado: Deuda[] = []
+  async cargarDeudas(){
+    
     this.deudas=[];
-      if(this.mesSeleccion.length!==0){this.firestoreservice.getCollectionquery<Deuda>(this.path,'mes','in',this.mesSeleccion).subscribe(
+      if(this.mesSeleccion.length!==0){this.firestoreservice.getCollectionquery<Deuda>(this.path,'mes','==',this.mesSeleccion).subscribe(
         res=>{
   
          
           if(res ){
-  
+            this.deudas= res;
             if(this.segmentoSeleccion=== 'Todos'){
               this.deudas= res;
               
             }
             else{
-                res.forEach(deuda=>{
-                            if(deuda.status.includes(this.segmentoSeleccion)){
-                              this.deudas.push(deuda);
-                            }
-                          });
+                this.deudas;
    
                           
             }

@@ -2,9 +2,12 @@ import { Component, OnInit, ViewChild, AfterViewInit, ElementRef} from '@angular
 import { Chart, ChartData, ChartTooltipItem } from 'chart.js';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
-import { Datos, Registro } from '../models';
+import { Datos, Deuda, Registro } from '../models';
 import * as moment from 'moment';
 import { NavController, IonSegment  } from '@ionic/angular';
+
+//para el chat e deudas
+import { ChartDataSets, ChartOptions,} from 'chart.js';
 
 
 
@@ -26,9 +29,11 @@ export class DaschboardComponent  implements AfterViewInit, OnInit {
 
   @ViewChild('barChart', { static: true }) barChart: ElementRef<HTMLCanvasElement>;
   @ViewChild('doughnutChart', { static: true }) doughnutChart: ElementRef<HTMLCanvasElement>;
+  @ViewChild('barChartDeudas', { static: true }) barChartDeudas: ElementRef<HTMLCanvasElement>;
   @ViewChild('segment') segment: IonSegment; ;
  
   graficoBarras: Chart;
+  graficoBarrasDeudas: Chart;
   graficocirular: Chart;
 
   uid='';
@@ -41,8 +46,9 @@ export class DaschboardComponent  implements AfterViewInit, OnInit {
   ingresos:[],
   gastos:[]};
   prueba:'titulo';
-  
+  pathDeudas='';
   path='';
+  deudas:Deuda[]=[];
   registros:Registro[]=[];
   mesSeleccion = moment(new Date()).locale('es').format('MMMM').charAt(0).toUpperCase() + moment(new Date()).locale('es').format('MMMM').slice(1);
   segmentoSeleccion='Todo';
@@ -80,11 +86,13 @@ export class DaschboardComponent  implements AfterViewInit, OnInit {
          this.uid= res.uid;
          
          this.path='usuarios/'+this.uid+'/movimientos';
+         this.pathDeudas='usuarios/'+this.uid+'/deudas';
          this.cargarDatos().then(()=>{
           
             this.resize().then(()=>{
               
-              this.createBarChart();
+              
+              
            });
             
           
@@ -252,6 +260,18 @@ return this.subcategoria;
 
    }
 
+   async cargarDeudas(){
+    await this.firestoreService.getcollection<Deuda>(this.pathDeudas).subscribe(res=>{
+      if(res){
+        this.deudas=res;
+        console.log(this.deudas);
+      }
+      else{
+        console.log('No tiene deudas Pendientes');
+      }
+    });
+   }
+
    async cargarDatos(){
   
      await   this.firestoreService.getcollection<Registro>(this.path).subscribe(
@@ -295,7 +315,7 @@ return this.subcategoria;
   
       
    
-
+this.cargarDeudas();
     return this.registros;
   }
 
@@ -317,6 +337,7 @@ return this.subcategoria;
       (window as any).dispatchEvent(new Event('resize')); 
       this.createBarChart();
       this.createDonaChart();
+      this.graficoDeudas();
      }, 5000);
    
    }
@@ -342,7 +363,7 @@ return this.subcategoria;
     
 
     let array:Registro[]=[];
-    console.log(this.registros);
+    
     
     array = this.registros.filter(registro => registro.mes === this.mesSeleccion);
     
@@ -516,49 +537,52 @@ return this.subcategoria;
     
   } 
  
-  
+ async graficoDeudas(){
 
-  /* {
+    if(this.graficoBarrasDeudas){
+      await this.graficoBarrasDeudas.destroy();
+ 
+     }
+
+     this.graficoBarrasDeudas = new Chart(this.barChartDeudas.nativeElement, {
       type: 'bar',
       data: {
-        labels: ['Capital','Compra','Gasto','Venta'],
-        datasets: [{
-          label: '',  
-          data: [5,10,15,20] ,
-          backgroundColor: [
-            '#E0FFFF',
-            'yellow',
-            '#F08080',
-            '#ADFF2F',
-
-          ],
-          borderColor: [
-            'rgba(54, 162, 235, 1)',
-            '#FFD700',
-            'red',
-            '#ADFF2F',
-          ],
-          borderWidth: 1.5,
-          hoverBackgroundColor: [
-            'rgba(54, 162, 235, 1)',
-            '#FFD700',
-            'red',
-            'green',
-          ]
-        }]
+        labels: ['Label 1', 'Label 2', 'Label 3', 'Label 4'], // Etiquetas para cada barra
+        datasets: [
+          {
+            label: 'Conjunto de datos 1',
+            data: [10, 20, 15, 30],
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Conjunto de datos 2',
+            data: [5, 15, 25, 10],
+            backgroundColor: 'rgba(255, 159, 64, 0.2)',
+            borderColor: 'rgba(255, 159, 64, 1)',
+            borderWidth: 1
+          }
+        ]
       },
       options: {
         scales: {
+          xAxes: [{
+            stacked: true,
+            ticks: {
+              beginAtZero: true
+            }
+          }],
           yAxes: [{
+            stacked: true,
             ticks: {
               beginAtZero: true
             }
           }]
         }
-      },
+      }
     });
 
-
-
-*/
+  
+}
 }

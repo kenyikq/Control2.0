@@ -6,7 +6,8 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { environment } from 'src/environments/environment'; //npm install firebase angularfire2 --save
 import { FirebaseauthService } from './firebaseauth.service';
-
+import { map } from 'rxjs/operators';
+import { Pago } from '../pages/models';
 
 
 
@@ -74,8 +75,6 @@ getCollectionquery<tipo>(path: string, campo: string, condicion: any, valor: any
   collection.doc(id).ref.update({
     status: status
   });
-  
-
  
 
  }
@@ -89,5 +88,16 @@ getCollectionquery<tipo>(path: string, campo: string, condicion: any, valor: any
   const collection= this.database.collection<tipo>(path);
   return collection.valueChanges();
  }
+
+ getultimopago<tipo>(path: string){
+  const collectionRef= this.database.collection<tipo>(path, (ref) =>
+  ref.orderBy('timestamp', 'desc').limit(1)
+);
+
+return collectionRef as tipo;
+
+
+}
+ 
 
 }

@@ -120,7 +120,7 @@
     <h2 style="margin-bottom: 15px; color: aliceblue;" class="subtitulo text-center ">Historico de Movimientos</h2>
     <!---Tabla de transacciones-->
 <div   class="m-3">
-  <ion-segment style="background: #ffc107;" [scrollable]="true" (ionChange)="changeSegment($event)" value="Todos" mode="ios" >
+  <ion-segment style="background: linear-gradient(#121212, #ffffff);" [scrollable]="true" (ionChange)="changeSegment($event)" value="Todos" mode="ios" >
     <ion-segment-button value="Todos">
       <ion-label class="normal" >Todos</ion-label>
     </ion-segment-button>  
@@ -138,17 +138,17 @@
     
 
    <ion-card style="margin: 2%">
-<div style="margin-left: calc(90% - 100px);  "><ion-list>
-      <ion-item style="height: 35px;">
+<div style="margin-left: calc(100% - 90px);  "><ion-list>
+      <ion-item style="height: 29px;">
         <ion-select 
         placeholder="Filtrar Mes"
         mode="ios"
         aria-label="Fruit" 
            justify="end" 
-        interface="alert"
+        interface="popover"
         toggleIcon="add"
       expandedIcon="remove"
-        [multiple]="true"
+        [multiple]="false"
         [(ngModel)]="mesSeleccion"
         (ionChange)="filtroMes()">
           <ion-select-option value="enero">Enero</ion-select-option>

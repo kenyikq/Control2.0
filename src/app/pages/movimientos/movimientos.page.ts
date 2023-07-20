@@ -23,7 +23,7 @@ export class MovimientosPage implements OnInit {
   loading: any;
   totalIngreso=0;
   totalGasto=0;
-  mesSeleccion: string[] =[moment(new Date()).locale('es').format('MMMM')];
+  mesSeleccion =moment(new Date()).locale('es').format('MMMM');
   segmentoSeleccion='Todos';
 
 
@@ -367,7 +367,7 @@ this.idusuario().then(res=>{
   async filtroMes(){
   let listado: Registro[] = []
   this.registros=[];
-    if(this.mesSeleccion.length!==0){this.firestoreservice.getCollectionquery<Registro>(this.path,'mes','in',this.mesSeleccion).subscribe(
+    if(this.mesSeleccion.length!==0){this.firestoreservice.getCollectionquery<Registro>(this.path,'mes','==',this.mesSeleccion).subscribe(
       res=>{
 
        

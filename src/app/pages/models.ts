@@ -31,17 +31,14 @@ export interface Deuda {
 
 export interface Pago {
     id:string;
-    acreedor: string;
-    fechaPago: string;
+    fechaCreacion: Date;
+    fechaPago: Date;
     TipoPago: string;
     pago: number;
-    montoAdeudado: number;
-    mes: string;
-    dia: string;
-    anio: string;
-    
-
+    montoPendiente:number;
+ 
 }
+
 export interface Usuario{
     uid: string;
     nombre: string;
