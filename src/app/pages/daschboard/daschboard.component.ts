@@ -42,6 +42,11 @@ export class DaschboardComponent  implements AfterViewInit, OnInit {
     gastos:0,
     ingresos:0
   };
+  deudasDatos={
+    deudor: [] as any,
+    pago:[] as any,
+    pendiente:[] as any,
+  }
   newdato:Datos={ mes:[],
   ingresos:[],
   gastos:[]};
@@ -264,7 +269,11 @@ return this.subcategoria;
     await this.firestoreService.getcollection<Deuda>(this.pathDeudas).subscribe(res=>{
       if(res){
         this.deudas=res;
-        console.log(this.deudas);
+        this.deudas.forEach(deuda=>{
+          this.deudasDatos.deudor.push(deuda.acreedor+' (Deuda:'+ deuda.monto.toLocaleString()+') ');
+          this.deudasDatos.pago.push(deuda.monto-deuda.montoPendiente);
+          this.deudasDatos.pendiente.push(deuda.montoPendiente);
+        });
       }
       else{
         console.log('No tiene deudas Pendientes');
@@ -510,14 +519,16 @@ this.cargarDeudas();
           callbacks: {
             label: function(tooltipItem, data) {
               const value = tooltipItem.value || '';
-              return 'Valor: ' + new Intl.NumberFormat().format(parseInt(value))+' RD$';
+              return tooltipItem.xLabel + new Intl.NumberFormat().format(parseInt(value))+' RD$';
             }
           }
         },
         
         
         scales: {
-          
+          xAxes: [{
+             // Deshabilitar las líneas verticales del eje X
+          }],
           yAxes: [{
             display: false ,
             ticks: {
@@ -547,18 +558,18 @@ this.cargarDeudas();
      this.graficoBarrasDeudas = new Chart(this.barChartDeudas.nativeElement, {
       type: 'bar',
       data: {
-        labels: ['Label 1', 'Label 2', 'Label 3', 'Label 4'], // Etiquetas para cada barra
+        labels:   this.deudasDatos.deudor, // Etiquetas para cada barra
         datasets: [
           {
-            label: 'Conjunto de datos 1',
-            data: [10, 20, 15, 30],
+            label: 'Monto Pagado',
+            data: this.deudasDatos.pago,
             backgroundColor: 'rgba(75, 192, 192, 0.2)',
             borderColor: 'rgba(75, 192, 192, 1)',
             borderWidth: 1
           },
           {
-            label: 'Conjunto de datos 2',
-            data: [5, 15, 25, 10],
+            label: 'Monto Pendiente',
+            data: this.deudasDatos.pendiente,
             backgroundColor: 'rgba(255, 159, 64, 0.2)',
             borderColor: 'rgba(255, 159, 64, 1)',
             borderWidth: 1
@@ -566,17 +577,33 @@ this.cargarDeudas();
         ]
       },
       options: {
+        tooltips: {
+          callbacks: {
+            label: function(tooltipItem, data) {
+              const value = tooltipItem.value || '';
+              return 'Valor: ' + new Intl.NumberFormat().format(parseInt(value))+' RD$';
+            }
+          }
+        },
         scales: {
           xAxes: [{
+            
             stacked: true,
             ticks: {
               beginAtZero: true
             }
           }],
           yAxes: [{
-            stacked: true,
+            display: false ,
             ticks: {
-              beginAtZero: true
+              beginAtZero: true,
+              callback: function(value) {
+                const numericValue = Number(value);
+                if (!isNaN(numericValue) && numericValue >= 1000) {
+                  return (numericValue / 1000) + ' mil';
+                }
+                return value;
+              }
             }
           }]
         }

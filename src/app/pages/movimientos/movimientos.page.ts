@@ -399,7 +399,7 @@ this.idusuario().then(res=>{
   }
   else{this.alerta('Debe seleccionar un mes');}
 }
-    
   
+
 
 }

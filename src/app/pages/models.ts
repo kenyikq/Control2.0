@@ -21,7 +21,9 @@ export interface Deuda {
     acreedor: string;
     concepto: string;
     status: string;
+    pagos:Pago[];
     monto: number;
+    montoPendiente: number;
     mes: string;
     dia: string;
     anio: string;

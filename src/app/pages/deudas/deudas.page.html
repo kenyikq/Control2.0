@@ -130,11 +130,11 @@
         <ion-segment-button value="Todos">
           <ion-label class="normal" >Todos</ion-label>
         </ion-segment-button>  
-        <ion-segment-button value="Ingresos">
-            <ion-label class="normal">Ingresos</ion-label>
+        <ion-segment-button value="Pendiente">
+            <ion-label class="normal">Pendiente</ion-label>
           </ion-segment-button>
-          <ion-segment-button value="Gastos">
-            <ion-label class="normal" >Gastos</ion-label>
+          <ion-segment-button value="Saldado">
+            <ion-label class="normal" >Saldados</ion-label>
           </ion-segment-button>
          
         </ion-segment>
@@ -176,7 +176,8 @@
         <ion-col>{{deuda.acreedor}} </ion-col>
         <ion-col class="hide">{{deuda.concepto}} </ion-col>
         <ion-col class="hide" style="width: 90px; ">{{deuda.fechaPago  | date: 'dd/MM/yy'}} </ion-col>   
-        <ion-col>{{deuda.monto | number}}</ion-col>
+        <ion-col *ngIf="deuda.montoPendiente!==0">{{deuda.montoPendiente | number}}</ion-col>
+        <ion-col *ngIf="deuda.montoPendiente===0">{{deuda.monto | number}}</ion-col>
         <ion-ripple-effect></ion-ripple-effect>
       
       </ion-row>
@@ -198,7 +199,7 @@
         <ion-content style="--background: #fff;">
         <ion-header>
           <ion-toolbar translucent> 
-            <ion-button slot="end" fill="clear" (click)="modal.dismiss()">
+            <ion-button slot="end" fill="clear" (click)="modal.dismiss(); limpiarPagos()">
               
               <ion-icon color ="danger"  slot="end" name="close"></ion-icon>
             </ion-button>
@@ -227,8 +228,8 @@
               </ion-item>
 
               <ion-item style="text-align: center;" lines="none">
-                <ion-label class="normal " style="   font-weight: 600; margin-left: 3px;">Monto de Prestamo:<ion-note class="normal" slot="end">{{newDeuda.monto| number}}</ion-note></ion-label>
-                
+                <ion-label  class="normal " style="   font-weight: 600; margin-left: 3px;">Monto de Prestamo:<ion-note class="normal" slot="end">{{newDeuda.monto| number}}</ion-note></ion-label>
+               
               </ion-item >
 
               <ion-item lines="none" style="text-align: center;">
@@ -261,9 +262,9 @@
 
  <div class="normal" style="text-align: center; align-items: center;">
    <ion-button  shape="round" color="dark" (click)="aplicarPago()">
-     Guardar
+     Aplicar
    </ion-button>
-   <ion-button   shape="round" color="danger" (click)="modal.dismiss()">
+   <ion-button   shape="round" color="danger" (click)="modal.dismiss();limpiarPagos()">
      Cancelar
    </ion-button>
  </div> 

@@ -34,10 +34,10 @@ export class DeudasPage implements OnInit {
   status ='visualizando';
   uid='';
   private path= 'usuarios/'+this.uid+'/deudas/';
-  private pathPago='';
+  ultimoPago:Pago;
   loading:any;
   mesSeleccion =moment(new Date()).locale('es').format('MMMM');
-  segmentoSeleccion='Todos';
+  segmentoSeleccion='Pendiente';
 
 
   constructor(public firestoreservice: FirestoreService,
@@ -86,8 +86,10 @@ export class DeudasPage implements OnInit {
     TipoPrestamo: '',
     acreedor:  '',
     concepto:  '',
-    status:  '',
+    status:  'Pendiente',
     monto: 0,
+    montoPendiente: 0,
+    pagos:[],
     mes:   new Date(this.date).getMonth().toString(),
     dia:   new Date().getDay().toString(),
     anio:  moment(this.date).format('yyyy'),
@@ -99,6 +101,7 @@ async guardardatos(){
   this.newDeuda.status='Pendiente';
   this.firestoreservice.createdoc(this.newDeuda,this.path, this.newDeuda.id).then(res=>{
     this.loading.dismiss();
+   this.nuevodeuda();
     this.presentToast('Datos agregados Correctamente');
     this.status='visualizando';
     }).catch(error=>{
@@ -117,7 +120,7 @@ async guardardatos(){
 
 
   determinarTipoPago(){
-    console.log (this.selecTipoPago.value);
+    
     if(this.selecTipoPago.value==='Saldo'){
       this.pago.TipoPago=this.selecTipoPago.value;
       this.pago.pago= this.saldo;
@@ -135,27 +138,30 @@ async guardardatos(){
   }
 
  async aplicarPago(){
+    if(this.formPago.valid && this.pago.pago> 0){
+      this.pago.montoPendiente=this.montoPendiente;
+      this.newDeuda.montoPendiente=this.montoPendiente;
+      this.newDeuda.pagos.push(this.pago);
+      
 
- 
-
-    if(this.formPago.valid){
-      if  (this.pago.montoPendiente===0){
-        this.firestoreservice.updateStatus('Saldado',this.newDeuda.id,this.path);
+      if  (this.montoPendiente === 0){
+        this.newDeuda.status='Saldado';
       }
-  this.firestoreservice.createdoc(this.pago,this.pathPago,this.pago.id).then(res=>{
-    if (res!==null){
-this.presentToast('Pago aplicado Correctamente');
+    
+
+      this.firestoreservice.createdoc(this.newDeuda, this.path, this.newDeuda.id).then(()=>{
+
+        this.presentToast('Pago aplicado Correctamente');
       this.pago ={id:this.firestoreservice.getid(),
         fechaCreacion: new Date(),
         fechaPago: new Date() ,
         TipoPago: 'Abono',
         pago: 0,
         montoPendiente:0};
-    }
-  });
 
+      });
 
-     
+      this.modal.dismiss();
     }
     else{
       this.alerta('Favor llenar todos los campos');
@@ -164,21 +170,42 @@ this.presentToast('Pago aplicado Correctamente');
 
   }
 
+  limpiarPagos(){
+    this.pago ={id:this.firestoreservice.getid(),
+      fechaCreacion: new Date(),
+      fechaPago: new Date() ,
+      TipoPago: 'Abono',
+      pago: 0,
+      montoPendiente:0};
+
+  }
 
 async mostrarforPago(deuda:Deuda){
-  this.pathPago='usuarios/'+this.uid+'/deudas/'+deuda.id+'/pagos/';
-  
- let ultimoPago = await this.firestoreservice.getultimopago<Pago>(this.pathPago) ;
-console.log(ultimoPago.montoPendiente);
 
-  if(ultimoPago.montoPendiente=== undefined){
+  this.ultimoPago={id:this.firestoreservice.getid(),
+  fechaCreacion: new Date(),
+  fechaPago: new Date() ,
+  TipoPago: 'Abono',
+  pago: 0,
+  montoPendiente:0};
+
+
+
+  if(deuda.pagos === undefined || deuda.pagos.length ===0){
+   
+    this.saldo = deuda.monto;
     
-    this.saldo=deuda.monto;
   }
 
   else{
-    this.saldo=ultimoPago.montoPendiente;
 
+    const OrdenPorFecha = deuda.pagos.sort((a, b) => new Date (a.fechaPago).getTime() - new Date (b.fechaPago).getTime());
+    
+    this.ultimoPago = (OrdenPorFecha[OrdenPorFecha.length - 1]); 
+    
+    this.saldo=this.ultimoPago.montoPendiente;
+    console.log(this.saldo);
+    
   }
   this.newDeuda= deuda;
   
@@ -314,6 +341,8 @@ nuevodeuda(){
     concepto:  '',
     status:  '',
     monto: 0,
+    montoPendiente: 0,
+    pagos:[],
     mes:   new Date(this.date).getMonth().toString(),
     dia:   new Date().getDay().toString(),
     anio:  moment(this.date).format('yyyy'),
@@ -389,24 +418,33 @@ async idusuario(){
 
 
   changeSegment(ev: any) {
-    this.segmentoSeleccion = ev.detail.value;}
+    this.segmentoSeleccion = ev.detail.value;
+    console.log(this.segmentoSeleccion);
+    this.cargarDeudas();
+  }
 
   async cargarDeudas(){
     
-    this.deudas=[];
-      if(this.mesSeleccion.length!==0){this.firestoreservice.getCollectionquery<Deuda>(this.path,'mes','==',this.mesSeleccion).subscribe(
+    
+      if(this.mesSeleccion.length!==0){this.firestoreservice.getcollection<Deuda>(this.path).subscribe(
+        //'mes','==',this.mesSeleccion
         res=>{
-  
-         
+          this.deudas=[];
+         console.log(this.segmentoSeleccion);
           if(res ){
             this.deudas= res;
-            if(this.segmentoSeleccion=== 'Todos'){
+            if(this.segmentoSeleccion === 'Todos'){
               this.deudas= res;
+            
               
             }
             else{
-                this.deudas;
-   
+
+                this.deudas= res.filter((deuda)=>{
+                  return deuda.status === this.segmentoSeleccion;
+                });
+                
+
                           
             }
   

@@ -5,7 +5,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { AlertController, IonSelect, LoadingController, ModalController, NavController, ToastController, IonSegment, IonCheckbox } from '@ionic/angular';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
-import { Tarea } from '../models';
+import { Registro, Tarea } from '../models';
 import * as moment from 'moment';
 import { set } from 'date-fns';
 
@@ -76,20 +76,26 @@ private path= 'usuarios/'+this.uid+'/presupuesto/';
     this.limpiar();
   }
   completar(tarea:Tarea){
+    
     let statuschange =''; 
     let msj='';
     if(tarea.status==='Completado'){
       statuschange= 'Pendiente';
       msj='Tarea Deshecha';
+      this.firestoreService.updateStatus(statuschange,tarea.id,this.path).then(res=>{
+        this.presentToast(msj);
+      })
     }
     else{
       statuschange= 'Completado';
       msj='Tarea Completada';
+      this.firestoreService.updateStatus(statuschange,tarea.id,this.path).then(res=>{
+        this.presentToast(msj);
+        this.guardarGasto(tarea);
+      })
     }
     
-    this.firestoreService.updateStatus(statuschange,tarea.id,this.path).then(res=>{
-      this.presentToast(msj);
-    })
+   
 
   }
 
@@ -420,6 +426,28 @@ limpiar(){
     console.log(ev);
 
   }
+
+async  guardarGasto(tarea: Tarea){
+    const path='usuarios/'+this.uid+'/movimientos';
+    const newRegistro: Registro = await {
+       id: this.firestoreService.getid(),
+       fecha:moment(new Date()).locale('es').format('YYYY-MM-D') ,
+       fechaCreacion: new Date(),
+       categoria: 'Gastos',
+       subcategoria: tarea.subcategoria,
+       concepto: 'Pago de '+tarea.descripcion,
+       monto: tarea.monto,
+       mes: moment(new Date()).locale('es').format('MMMM'),
+       dia: new Date().getDay().toString(),
+       anio: moment().format('yyyy'),
+   
+     }
+    
+
+     this.firestoreService.createdoc(newRegistro, path, newRegistro.id);
+     
+   }
+     
  
 
 }

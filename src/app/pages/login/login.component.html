@@ -26,32 +26,32 @@
   
   <div class="login-section" >
     <div class="heading ion padding">
-      <h1 style="text-align: center;">VControl</h1>
-      <p style="text-align: center;">Inicia secion para continuar</p>
+      <h1 style="text-shadow: 2px 2px 1px rgba(0, 0, 0, 0.5); color: white;" class=" titulo p-3 text-center encabezado">Control Personal</h1>
+      <p class="subtitulo" style="text-align: center; text-shadow: 2px 2px 1px rgba(0, 0, 0, 0.5); color: white;">Inicia secion para continuar</p>
     </div>
 
     <div class="login-form ion-padding">
       <div class="form-input">
-        <ion-icon name="mail-outline"></ion-icon>
+        <ion-icon style="margin-top: -11px;"  name="mail-outline"></ion-icon>
         <ion-item>
-          <ion-label class="normal">Correo: </ion-label>
+          <ion-label style="font-weight: 600;" class="normal">Correo: </ion-label>
           <ion-input label="Correo" [(ngModel)]="usuario.email" type="email"></ion-input>
         </ion-item>
       </div>
 
       <div class="form-input">
-        <ion-icon lot="start" name="lock-closed-outline"></ion-icon>
+        <ion-icon style="margin-top: -11px;" lot="start" name="lock-closed-outline"></ion-icon>
         <ion-item>
-          <ion-label class="normal">Contraseña: </ion-label>
+          <ion-label style="font-weight: 600;"  class="normal">Contraseña: </ion-label>
           <ion-input label="Contraseña" [(ngModel)]="usuario.password"  type="password"></ion-input>
         </ion-item>
       </div>
     </div>
     <div class="action-buttons ion-padding">
-      <ion-button shape="round" size="large" style="--background: red;"  (click)= "ingresar()">Inicio de sesion</ion-button>
+      <ion-button shape="round" size="large" style="--background: #e97223;"  (click)= "ingresar()">Inicio de sesion</ion-button>
       
       <p>Aun no tienes un Usuario?... Solo debes registrarte</p>
-      <ion-button class="signup-button" shape="round" size="large" fill="outline" (click)= "goAnOtherPage('/usuario')">Registro</ion-button>
+      <ion-button style="--border-color:#e97223; color: #e97223;" class="signup-button" shape="round" size="large" fill="outline" (click)= "goAnOtherPage('/usuario')">Registro</ion-button>
     </div>
   </div>
 </ion-content>
