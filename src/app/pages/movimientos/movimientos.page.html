@@ -73,9 +73,19 @@
       <ion-select  clearInput="true"  formControlName="subcategoria"  required="true" mode="ios" label="Subcategoria:" aria-label="Fruit" interface="popover" value="newRegistro.subcategoria" [(ngModel)]="newRegistro.subcategoria"placeholder="Seleccionar">
         <ion-select-option *ngIf="newRegistro.categoria === 'Ingresos'" value="Sueldo">Sueldo</ion-select-option>
         <ion-select-option *ngIf="newRegistro.categoria === 'Ingresos'" value="Regalo">Regalo</ion-select-option>
-        <ion-select-option *ngIf="newRegistro.categoria === 'Gastos'" value="Compra">Compra</ion-select-option>
-        <ion-select-option *ngIf="newRegistro.categoria === 'Gastos'" value="Combustible">Combustible</ion-select-option>
-        <ion-select-option *ngIf="newRegistro.categoria === 'Gastos'" value="Comida">Comida</ion-select-option>
+        <ion-select-option *ngIf="newRegistro.categoria === 'Gastos'"  value="Ahorro">Ahorro</ion-select-option>
+        <ion-select-option *ngIf="newRegistro.categoria === 'Gastos'"  value="Combustible">Combustible</ion-select-option>
+        <ion-select-option *ngIf="newRegistro.categoria === 'Gastos'"  value="Alimentos">Alimentos</ion-select-option>
+        <ion-select-option *ngIf="newRegistro.categoria === 'Gastos'"  value="Prestamo">Prestamo</ion-select-option>
+        <ion-select-option *ngIf="newRegistro.categoria === 'Gastos'"  value="Deudas">Deudas</ion-select-option>
+        <ion-select-option *ngIf="newRegistro.categoria === 'Gastos'"  value="Diezmo">Diezmo</ion-select-option>
+        <ion-select-option *ngIf="newRegistro.categoria === 'Gastos'"  value="Emely">Emely</ion-select-option>
+        <ion-select-option *ngIf="newRegistro.categoria === 'Gastos'"  value="Entretenimiento">Entretenimiento</ion-select-option>
+        <ion-select-option *ngIf="newRegistro.categoria === 'Gastos'"  value="Comunicaciones">Comunicaciones</ion-select-option>
+        <ion-select-option *ngIf="newRegistro.categoria === 'Gastos'"  value="Kenyi">Kenyi</ion-select-option>
+        <ion-select-option *ngIf="newRegistro.categoria === 'Gastos'"  value="Luz Electrica">Luz electrica</ion-select-option>
+        <ion-select-option *ngIf="newRegistro.categoria === 'Gastos'"  value="Motor">Motor</ion-select-option>
+        <ion-select-option *ngIf="newRegistro.categoria === 'Gastos'"  value="Otros">Otros</ion-select-option>
       </ion-select>
     </ion-item>
     <span class="normal" *ngIf="this.myForm.get('subcategoria')?.hasError('required') && myForm.get('subcategoria')?.touched">
