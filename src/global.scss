@@ -85,3 +85,27 @@
   --background: #343434;
   --color: #ffffff;
 }
+ ion-datetime{
+  background: linear-gradient(0deg,rgba(0,0,0,0.9), rgba(0,0,0,0.0));
+   color: #fff;
+ }
+ ion-grid{
+  height: 100%;
+  .header-row {
+
+    color: #fff;
+    border: 2px solid #b6ba80;
+    font-weight: 600;
+
+  }
+}
+
+ion-row{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+   ion-col{width: auto;}
+  // border: solid 2px #f3eded;
+   margin: 2px;
+}
+

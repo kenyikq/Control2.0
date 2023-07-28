@@ -88,14 +88,14 @@
         <ion-select-option *ngIf="newRegistro.categoria === 'Gastos'"  value="Otros">Otros</ion-select-option>
       </ion-select>
     </ion-item>
-    <span class="normal" *ngIf="this.myForm.get('subcategoria')?.hasError('required') && myForm.get('subcategoria')?.touched">
+    <span style="text-align: right;" class="normal" *ngIf="this.myForm.get('subcategoria')?.hasError('required') && myForm.get('subcategoria')?.touched">
       <ion-label color="danger">Subcategoria es requerida.</ion-label>
     </span>
   </ion-list>
 
       <ion-item>
         <ion-label>Concepto: </ion-label>
-        <ion-input label="Concepto" clearInput [ngModelOptions]="{standalone: true}" required="true" [(ngModel)]="newRegistro.concepto" type="string" inputmode="text"></ion-input>
+        <ion-input style="text-align: right;" placeholder="Descripcion" label="Concepto" clearInput [ngModelOptions]="{standalone: true}" required="true" [(ngModel)]="newRegistro.concepto" type="string" inputmode="text"></ion-input>
       </ion-item>
 
    
@@ -109,7 +109,8 @@
         <ion-label color="danger">Monto es requerido.</ion-label>
       </span>
       <span class="normal" *ngIf="this.myForm.get('monto')?.hasError('min') && myForm.get('monto')?.touched">
-        <ion-label color="danger">El monto debe de ser mayor que cero.</ion-label>
+       <div style="overflow-x: auto;
+       white-space: nowrap;"><ion-label color="danger">El monto debe de ser mayor que cero.</ion-label></div> 
       </span>
       </ion-item>
 <div class="normal" style="text-align: center; align-items: center;">
@@ -178,7 +179,7 @@
     </ion-list></div>
     
 
-    <ion-grid mode="ios" class="ion-text-center">
+    <ion-grid style="border: solid 2px #f3eded;  box-shadow: 0 2px 4px rgba(194, 197, 19, 0.1);" mode="ios" class="ion-text-center">
   
     
       <ion-row class="header-row colorB">

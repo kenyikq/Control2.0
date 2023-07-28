@@ -4,17 +4,7 @@
     overflow-y: hidden;
     }
 
-    ion-grid{
-        height: 100%;
-    }
-    ion-row{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-         ion-col{width: auto;}
-         border: solid 1px #f3eded;
-    }
-    
+  
     
    
 
@@ -49,12 +39,7 @@ ion-button{
 }
 
 
-    .header-row {
-      
-        color: #fff;
-        border: 1px solid #aeb7ca;
- 
-      }
+    
       
       ion-fab-button {
         --background: #ffc107;

@@ -1,8 +1,9 @@
+import { FechaLargaPipe } from './../../fechaLarga.pipe';
 import { Subscription } from 'rxjs';
-
+import { take } from 'rxjs/operators';
 import { Component, OnInit, ViewChild  } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { AlertController, IonSelect, LoadingController, ModalController, NavController, ToastController, IonSegment, IonCheckbox } from '@ionic/angular';
+import { AlertController, IonSelect, LoadingController, ModalController, NavController, ToastController, IonSegment, IonCheckbox, CheckboxCustomEvent } from '@ionic/angular';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { Registro, Tarea } from '../models';
@@ -30,7 +31,8 @@ export class PresupuestoPage implements OnInit {
   datos: Tarea[]=[];
   valorcheck1 = false;
   valorcheck2 = false;
-  isActionSheetOpen= false
+  isActionSheetOpen= false;
+  mesQuincena='';
   segmentoSeleccion="Pendiente";
   tituloAgregarTarea="Nueva Tarea"
   presentingElement: any = null;
@@ -105,7 +107,7 @@ private path= 'usuarios/'+this.uid+'/presupuesto/';
  
   edit(tarea:Tarea) { 
    
-    console.log(tarea.fecha);
+   
     this.date=tarea.fecha;
     this.tituloAgregarTarea="Actualizar Tarea";
     this.newtarea= tarea;
@@ -206,15 +208,17 @@ fechaa() {
   
 }
 agregarTarea(){
-  console.log(this.path);
+  console.log(this.newtarea);
+  
  if (this.myForm.valid){
   this.firestoreService.createdoc(this.newtarea,this.path,this.newtarea.id).then(res=>{
 this.limpiar();
 
-  this.tituloAgregarTarea="Nueva Tarea"
+  
 this.modal.dismiss();
 
 this.presentToast('Accion realizada correctamente');
+this.tituloAgregarTarea="Nueva Tarea"
   });
 
  }
@@ -283,8 +287,9 @@ limpiar(){
      valor = true;
   
    setTimeout(() => {
-    this.determinarquicena();
+    
     this.filtroStatus();
+    this.determinarquicena();
    }, 200);
    
     
@@ -346,84 +351,170 @@ limpiar(){
 
     await alert.present();
   }
+  
+
+  capitalizar(str: string): string {
+    if (str.length === 0) {
+      return str;
+    }
+  
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
+
+
+
 
    async onChange(ev: any) {
-    if(ev!== null && ev.detail.checked===true){
-      
-      this.check1.checked= false;
+    
+     if(ev!== null && ev.detail.checked===true){ //cuando doy click
+      this.check2.checked=false;
+      this.valorcheck1=this.check1.checked;
      
     }
 
-    else{
+    else{// cuando inicia la aplicacion
     
     setTimeout(() => {
-      this.valorcheck1=true;
       this.valorcheck2=false;
+        this.valorcheck1=true;
     }, 10);
+     
+    
     
   }
+
+ 
       
       
 
-      this.firestoreService.getCollectionquery<Tarea>(this.path,'quincena','==','Primera').subscribe( res=>{
-        this.datos=res;
-        this.todoList=res;
-        this.encabezado='Presupuesto Para Primera Quincena';
+      this.firestoreService.getCollectionquery<Tarea>(this.path,'quincena','in',['Primera','Siempre']).pipe(take(2)).subscribe( res=>{
+        const mesactual = this.capitalizar(moment().locale('es').format('MMMM'));
+        
+        if  (this.capitalizar(this.mesQuincena)!== mesactual){
+          
+         console.log('de la primera if');
+          this.datos=res;
+          this.todoList=res;
+        }
+
+        else{
+          console.log('else');
+          let actulizarMesActual: Tarea[]=[];
+          
+          res.forEach(tarea=>{
+            if  (tarea.categoria!=='Esporadico'  ){//recurrencia
+              
+            const fechamesActual= moment(tarea.fecha, 'YYYY-MM-DD').set('month', moment().month()); //convierte al mes actual
+           tarea.fecha= fechamesActual.format('YYYY-MM-DD');
+           actulizarMesActual.push(tarea);
+          }
+
+          });
+         
+          this.datos=actulizarMesActual;
+          this.todoList=actulizarMesActual;
+          const objeto={presupuesto:actulizarMesActual};
+          const id =this.uid;
+          this.firestoreService.deletedoc(this.uid, 'usuarios').then(()=>{
+              
+            this.firestoreService.createdoc(objeto,'usuarios',id);
+          }).finally(()=>{this.uid= id;});
+         }
+        
+         this.encabezado='Presupuesto Primera Quincena de '+this.mesQuincena.charAt(0).toUpperCase() + this.mesQuincena.slice(1).toLowerCase();
         this.filtroStatus();
+        setTimeout(() => {
+          this.modal2.dismiss();
+        }, 100);
+       
       });
     
+      
     
-    this.modal2.dismiss();
   }
 
-   async onChange2(ev: any) {
+  async onChange2(ev: any) {
     
-    if(ev!== null && ev.detail.checked===true){
-      
-      this.check2.checked= false;
+     if(ev!== null && ev.detail.checked===true){
+      this.valorcheck2=this.check2.checked;
+      this.check1.checked=false;
      
     }
 
     else{
+    
+    
       setTimeout(() => {
-    
+        this.valorcheck1=false;
         this.valorcheck2=true;
-          this.valorcheck1=false;
-          this.encabezado='Presupuesto Para Segunda Quincena';
-       }, 10);
-
-    }
-   
+      }, 10);
+       
     
+  }
       
-      this.firestoreService.getCollectionquery<Tarea>(this.path,'quincena','==','Segunda').subscribe( res=>{
-        this.encabezado='Presupuesto Para Segunda Quincena';
+      
+
+      this.firestoreService.getCollectionquery<Tarea>(this.path,'quincena','in',['Segunda','Siempre']).subscribe( res=>{
         this.datos=res;
         this.todoList=res;
+        this.encabezado='Presupuesto Segunda Quincena de '+this.mesQuincena.charAt(0).toUpperCase() + this.mesQuincena.slice(1).toLowerCase();
         this.filtroStatus();
+        setTimeout(() => {
+          this.modal2.dismiss();
+        }, 100);
       });
     
-
-   
-    this.modal2.dismiss();
+      
+    
   }
+
+
   determinarquicena(){
     const fechaActual = new Date();
     const diaActual = fechaActual.getDate();
+    
+    
 
-    if (diaActual >= 13 && diaActual <= 25) {
+    if (diaActual < 9 ){ 
       
-      this.onChange(null);
-      
-      
-    } else {
-     
+      this.mesQuincena = moment().subtract(1, 'months').locale('es').format('MMMM'); // Subtract 1 month from the current date mes anterior
       this.onChange2(null);
     }
+
+    else{
+      this.mesQuincena = moment().locale('es').format('MMMM');//mes actual
+
+      if (diaActual >= 9 && diaActual <= 20) {
+      
+        this.onChange(null);
+        
+        
+      } else {
+       
+        this.onChange2(null);
+      }
+      
+    }
+
+    
   
   }
+
+  activarresaltado(task:Tarea){
+    const mesActual = moment().format('MMMM');
+    const mesTarea =moment(task.fecha).format('MMMM');
+if(mesTarea !== mesActual && task.status==='Pendiente'){
+  return true;
+}
+else{
+  return false;}
+
+
+  }
+
+
   onWillDismiss(ev: any){
-    console.log(ev);
+    console.log('onwilldismiss'+ev);
 
   }
 

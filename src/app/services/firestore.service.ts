@@ -58,9 +58,24 @@ getCollectionquery<tipo>(path: string, campo: string, condicion: any, valor: any
 
 
 
+createColletion(path:string, collectionData:any){
+  const collection =  this.database.collection(path).add(collectionData);
+  return collection;
+}
 
 
+actualizarColeccion(path: string, documentId: string, newData: any) {
+  // documentId es el ID del documento que deseas actualizar
+  // newData es un objeto que contiene los datos nuevos que deseas agregar o actualizar
 
+  this.database.collection(path).doc(documentId).set(newData, { merge: true })
+    .then(() => {
+      console.log('Documento actualizado exitosamente.');
+    })
+    .catch((error) => {
+      console.error('Error al actualizar el documento:', error);
+    });
+}
 
 
  deletedoc(id:string, path:string){

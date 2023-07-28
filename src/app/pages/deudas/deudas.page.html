@@ -70,13 +70,13 @@
   
   <ion-item class="normal">
     <ion-label>Acreedor: </ion-label>
-        <ion-input label="Acreedor: "  required="true" [(ngModel)]="newDeuda.acreedor" type="string" inputmode="text"></ion-input>
+        <ion-input placeholder=" Escribir acreedor" style="text-align: right;" label="Acreedor: "  required="true" [(ngModel)]="newDeuda.acreedor" type="string" inputmode="text"></ion-input>
       </ion-item>
 
       
       <ion-item class="normal">
        <ion-label>Concepto:</ion-label>
-        <ion-input label="Concepto" required="true" [(ngModel)]="newDeuda.concepto" type="string" inputmode="text"></ion-input>
+        <ion-input placeholder=" Escribir concepto" style="text-align: right;" label="Concepto" required="true" [(ngModel)]="newDeuda.concepto" type="string" inputmode="text"></ion-input>
       </ion-item>
 
       <ion-list>
@@ -104,7 +104,7 @@
 
       <ion-item class="normal">  
        <ion-label>Monto:</ion-label>
-        <ion-input required="true" label="Monto:" type="number" inputmode="numeric" [(ngModel)]="newDeuda.monto"></ion-input>
+        <ion-input style="text-align: right;" required="true" label="Monto:" type="number" inputmode="numeric" [(ngModel)]="newDeuda.monto"></ion-input>
 
      
       </ion-item>
