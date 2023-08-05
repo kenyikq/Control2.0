@@ -205,7 +205,7 @@
    
       <ion-row mode="ios" class="wrapper" *ngFor="let registro of registros" (click)="presentActionSheet(registro)">
         <ion-col style="width: 90px; ">{{registro.fecha  | date: 'dd/MM/yy'}}</ion-col>
-        <ion-col>{{registro.mes}}</ion-col>
+        <ion-col>{{registro.categoria}}</ion-col>
         <ion-col>{{registro.subcategoria}}</ion-col>
         <ion-col class="hide">{{registro.concepto}}</ion-col>
         <ion-col>{{registro.monto | number}}</ion-col>

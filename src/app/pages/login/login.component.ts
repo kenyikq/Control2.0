@@ -19,24 +19,6 @@ export class LoginComponent implements OnInit {
     loading: any;
     path= '/usuarios';
     uid = '';
-
-  constructor(public log: FirebaseauthService,
-    public firestoreService: FirestoreService,
-    public toastCtrl: ToastController,
-    public navCtrl: NavController,
-    public loadingController: LoadingController,
-    public alertController: AlertController) {
-      this.log.stateauth().subscribe( res=>{
-       
-        if (res !== null){
-          this.uid= res.uid;
-          this.getUserInfo(this.uid);
-        }else {
-          this.uid='';
-          this.limpiarcampos();
-        }
-      });
-    }
     usuario: Usuario  = {
       uid: '',
       nombre: '',
@@ -45,14 +27,35 @@ export class LoginComponent implements OnInit {
       password: '',
       fecha:new Date(),
       };
+
+  constructor(public log: FirebaseauthService,
+    public firestoreService: FirestoreService,
+    public toastCtrl: ToastController,
+    public navCtrl: NavController,
+    public loadingController: LoadingController,
+    public alertController: AlertController) {
+     this.log.stateauth().subscribe( res=>{
+       
+        if (res !== null){
+          this.uid= res.uid;
+          this.getUserInfo(this.uid);
+          console.log(res);
+        }else {
+          this.uid='';
+          this.limpiarcampos();
+        }
+      });
+    }
+   
   
 
 
 async ngOnInit() {
 const uid = await this.log.getUid();
-
+this.limpiarcampos();
 //this.seleccionA();
 }
+
 
 /*seleccionA(){
 
@@ -118,8 +121,9 @@ await this.loading.present();
 
 getUserInfo(uid: string){
 const path ='usuario';
-this.firestoreService.getDoc<any>(path,uid).pipe(). subscribe(res=>{
-this.usuario = res;
+this.firestoreService.getDoc<any>(path,uid).subscribe(res=>{
+  this.usuario = res;
+  console.log('Esto es del usuario '+uid);
 });
 }
 

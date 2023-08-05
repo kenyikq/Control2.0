@@ -113,6 +113,27 @@ return collectionRef as tipo;
 
 
 }
+
+deleteCollection(path:string) {
+  const collectionRef = this.database.collection(path);
+  return collectionRef.get().subscribe((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      doc.ref.delete();
+    });
+  });
+
+  
+}
+
+async updateFecha(fecha: string, id:string, path:string){
+  
+  const collection= await this.database.collection(path)
+  collection.doc(id).ref.update({
+    fecha: fecha
+  });
+ 
+
+ }
  
 
 }

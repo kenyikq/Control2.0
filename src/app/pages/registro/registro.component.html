@@ -27,10 +27,11 @@
   <div  class="login-section">
     
     <div class="form-input">
-      <ion-icon lot="start" name="person-outline"></ion-icon>
+      <ion-icon style="  margin-top: -12px;" lot="start" name="person-outline"></ion-icon>
       
       <ion-item>
-          <ion-input class="normal" label="Nombre" clearInput="true"  formControlName="nombre" [(ngModel)]="usuario.nombre" class="normal" type="string" inputmode="text" placeholder="Introduzca su Nombre" required></ion-input>
+        <ion-label>Nombre:</ion-label>
+          <ion-input style="margin-top: 8px;" class="normal" label="Nombre" clearInput="true"  formControlName="nombre" [(ngModel)]="usuario.nombre" class="normal" type="string" inputmode="text" placeholder="Introduzca su Nombre" required></ion-input>
         
          </ion-item>
       <span class="normal" *ngIf="this.myForm.get('nombre')?.hasError('required') && myForm.get('nombre')?.touched">
@@ -42,10 +43,10 @@
 
  
   <div class="form-input">
-    <ion-icon lot="start" name="call-outline"></ion-icon>
+    <ion-icon style=" margin-top: -12px;" lot="start" name="call-outline"></ion-icon>
         <ion-item>
-      
-      <ion-input class="normal" label="Contacto" (ngModelChange)="validarcel()"  pattern="^[0-9\-]*$" clearInput="true" formControlName="celular" [(ngModel)]="usuario.contacto" required class="normal" type="tel"
+      <ion-label>Celular:</ion-label>
+      <ion-input style="margin-top: 8px;" class="normal" label="Contacto" (ngModelChange)="validarcel()"  pattern="^[0-9\-]*$" clearInput="true" formControlName="celular" [(ngModel)]="usuario.contacto" required class="normal" type="tel"
        inputmode="tel" placeholder="Introduzca su numero de contacto"></ion-input>
      
     </ion-item>
@@ -62,10 +63,10 @@
   
 
   <div class="form-input">
-    <ion-icon lot="start" name="mail-outline"></ion-icon>
+    <ion-icon style=" margin-top: -12px;" lot="start" name="mail-outline"></ion-icon>
         <ion-item>
-     
-      <ion-input class="normal" label="Correo" clearInput="true"  formControlName="email" [(ngModel)]="usuario.email" class="normal" type="email" inputmode="email" 
+          <ion-label>Correo:</ion-label>
+      <ion-input style="margin-top: 8px;" class="normal" label="Correo" clearInput="true"  formControlName="email" [(ngModel)]="usuario.email" class="normal" type="email" inputmode="email" 
       required
       placeholder="Introduzca su correo electrónico"></ion-input>
     
@@ -79,9 +80,11 @@
   </div>
 
   <div class="form-input">
-    <ion-icon lot="start" name="lock-closed-outline"></ion-icon>
+    <ion-icon style= "margin-top: -12px;" lot="start" name="lock-closed-outline"></ion-icon>
+    
     <ion-item>
-      <ion-input class="normal" label="Clave" clearInput="true" pattern="^(?=.*[A-Z]).{6,}$" formControlName="password" [(ngModel)]="usuario.password" required class="normal" type="password" inputmode="password" placeholder="Introduzca su clave de acceso"></ion-input>
+      <ion-label>Contraseña:</ion-label>
+      <ion-input style="margin-top: 8px;" class="normal" label="Clave" clearInput="true" pattern="^(?=.*[A-Z]).{6,}$" formControlName="password" [(ngModel)]="usuario.password" required class="normal" type="password" inputmode="password" placeholder="Introduzca su clave de acceso"></ion-input>
     
     </ion-item>
     <span class="validacion normal" *ngIf="this.myForm.get('password')?.hasError('required') && myForm.get('password')?.touched">
@@ -97,9 +100,11 @@
   
 
   <div *ngIf="!uid.length" class="form-input">
-    <ion-icon lot="start" name="lock-closed-outline"></ion-icon>
+    <ion-icon style= "margin-top: -12px;" lot="start" name="lock-closed-outline"></ion-icon>
+    
     <ion-item >
-     <ion-input class="normal" label="Confirmar clave" formControlName="confirmarpassword" clearInput="true" required [ngModelOptions]="{standalone: true}"  *ngIf="!uid.length" [(ngModel)]="confirmarPass" class="normal" type="password" inputmode="password" placeholder="Repita su clave de acceso"></ion-input>
+      <ion-label>Confirmar Contraseña:</ion-label>
+     <ion-input style="margin-top: 8px;" class="normal" label="Confirmar clave" formControlName="confirmarpassword" clearInput="true" required [ngModelOptions]="{standalone: true}"  *ngIf="!uid.length" [(ngModel)]="confirmarPass" class="normal" type="password" inputmode="password" placeholder="Repita su clave de acceso"></ion-input>
     </ion-item>
     
     

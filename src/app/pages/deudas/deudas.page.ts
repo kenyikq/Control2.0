@@ -430,7 +430,7 @@ async idusuario(){
         //'mes','==',this.mesSeleccion
         res=>{
           this.deudas=[];
-         console.log(this.segmentoSeleccion);
+         
           if(res ){
             this.deudas= res;
             if(this.segmentoSeleccion === 'Todos'){

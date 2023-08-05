@@ -113,10 +113,10 @@ export class DaschboardComponent  implements AfterViewInit, OnInit {
    }
 
   ngOnInit() {
-   console.log();
+   
   }
   ngAfterViewInit(){
-   
+   console.log  ('afterinit');
     this.segment.value=this.mesSeleccion;
      
   }
@@ -334,7 +334,14 @@ this.cargarDeudas();
   }
 
  
-
+  ionViewDidEnter() {
+    // Aquí coloca el código que deseas ejecutar cada vez que se muestre el componente.
+    console.log('El componente se ha mostrado');
+    this.createBarChart();
+      this.createDonaChart();
+      this.graficoDeudas();
+    // Puedes llamar a funciones, realizar acciones o cargar datos aquí.
+  }
 
   // Otro código y métodos del componente...
   async resize(){

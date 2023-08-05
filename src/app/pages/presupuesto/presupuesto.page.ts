@@ -1,6 +1,6 @@
 import { FechaLargaPipe } from './../../fechaLarga.pipe';
 import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { first, take, throwIfEmpty } from 'rxjs/operators';
 import { Component, OnInit, ViewChild  } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AlertController, IonSelect, LoadingController, ModalController, NavController, ToastController, IonSegment, IonCheckbox, CheckboxCustomEvent } from '@ionic/angular';
@@ -208,7 +208,7 @@ fechaa() {
   
 }
 agregarTarea(){
-  console.log(this.newtarea);
+ 
   
  if (this.myForm.valid){
   this.firestoreService.createdoc(this.newtarea,this.path,this.newtarea.id).then(res=>{
@@ -240,16 +240,16 @@ this.filtroStatus();
 
 }
 
-filtroStatus(status: string= this.segmentoSeleccion){
+filtroStatus(seleccion: string= this.segmentoSeleccion){
 
-  if  (status==="Todos"){
+  if  (seleccion==="Todos"){
     this.todoList=this.datos;
     
   }
   else{
     
      this.todoList = this.datos.filter((tarea) => {
-     return tarea.status == status;
+     return tarea.status == seleccion;
     });
     
 
@@ -275,10 +275,11 @@ limpiar(){
   let valor= true;
   await this.log.stateauth().subscribe(res=>{
     
-
+console.log(res);
     if (res !== null){
       
       this.uid= res.uid;
+      
       
       this.path='usuarios/'+this.uid+'/presupuesto';
 
@@ -288,8 +289,9 @@ limpiar(){
   
    setTimeout(() => {
     
-    this.filtroStatus();
+   // this.filtroStatus();
     this.determinarquicena();
+    
    }, 200);
    
     
@@ -383,55 +385,86 @@ limpiar(){
     
   }
 
+
+ 
+
+  //Carga los datos
+  await this.firestoreService.getcollection<Tarea>(this.path).subscribe(res=>{
+ 
+       if(res.length){
+        this.datos=res;
+       //console.log('Datos: fila 393 '+JSON.stringify(this.datos, null, 2));
+        this.actulizarFecha(res);
+       }
+       else{console.log('No hay datos');}
+    
+  });
+
+    
  
       
       
 
-      this.firestoreService.getCollectionquery<Tarea>(this.path,'quincena','in',['Primera','Siempre']).pipe(take(2)).subscribe( res=>{
-        const mesactual = this.capitalizar(moment().locale('es').format('MMMM'));
-        
-        if  (this.capitalizar(this.mesQuincena)!== mesactual){
-          
-         console.log('de la primera if');
-          this.datos=res;
-          this.todoList=res;
-        }
-
-        else{
-          console.log('else');
-          let actulizarMesActual: Tarea[]=[];
-          
-          res.forEach(tarea=>{
-            if  (tarea.categoria!=='Esporadico'  ){//recurrencia
-              
-            const fechamesActual= moment(tarea.fecha, 'YYYY-MM-DD').set('month', moment().month()); //convierte al mes actual
-           tarea.fecha= fechamesActual.format('YYYY-MM-DD');
-           actulizarMesActual.push(tarea);
-          }
-
-          });
-         
-          this.datos=actulizarMesActual;
-          this.todoList=actulizarMesActual;
-          const objeto={presupuesto:actulizarMesActual};
-          const id =this.uid;
-          this.firestoreService.deletedoc(this.uid, 'usuarios').then(()=>{
-              
-            this.firestoreService.createdoc(objeto,'usuarios',id);
-          }).finally(()=>{this.uid= id;});
-         }
-        
-         this.encabezado='Presupuesto Primera Quincena de '+this.mesQuincena.charAt(0).toUpperCase() + this.mesQuincena.slice(1).toLowerCase();
-        this.filtroStatus();
-        setTimeout(() => {
-          this.modal2.dismiss();
-        }, 100);
-       
-      });
-    
+   this.encabezado='Presupuesto Primera Quincena de '+this.mesQuincena.charAt(0).toUpperCase() + this.mesQuincena.slice(1).toLowerCase();
+   this.filtroStatus();
+   setTimeout(() => {
+     this.modal2.dismiss();
+   }, 100);   
       
     
   }
+
+  async actulizarFecha(datos:Tarea[] ) {
+
+    const mesactual = this.capitalizar(moment().locale('es').format('MMMM'));
+   
+    if (this.capitalizar(this.mesQuincena) === mesactual) { //si el mes actual es igual al mes seleccionado en determinar quincena, (si esta menor que 9 el mes anterior)
+
+ 
+     // console.log('Datos para el forecha pag403: ' + JSON.stringify(datos, null, 2));
+
+      await datos.forEach(tarea => {
+        if (tarea.status === 'Pendiente') { 
+          
+          
+        }
+
+        else{//si la tarea esta completada
+          if (tarea.categoria !== 'Esporadico') {//Fijo, Variable, Esporadico
+            
+            const fechamesActual =  moment(tarea.fecha, 'YYYY-MM-DD').set('month', moment().month()); //convierte al mes actual
+            tarea.fecha = fechamesActual.format('YYYY-MM-DD');
+            tarea.status='Pendiente';
+            
+            this.firestoreService.createdoc(tarea,this.path, tarea.id);
+          }
+
+          
+
+        }
+
+        
+      });
+
+ // console.log('actulizar todos los datos: '+JSON.stringify(actulizarMesActual, null, 2));
+ 
+ this.todoList=await this.datos.filter(tarea=>{
+  return tarea.quincena ==='Primera'|| tarea.categoria ==='Siempre'
+});
+this.datos= this.todoList;
+    }
+
+   else{// si el mes actual no es el mes seleccionado en determinar quincena
+    this.todoList=await this.datos.filter(tarea=>{
+      return tarea.quincena ==='Primera'|| tarea.categoria ==='Siempre'
+    });
+
+   this.datos= this.todoList;
+
+   }
+  }
+
+
 
   async onChange2(ev: any) {
     
@@ -456,6 +489,7 @@ limpiar(){
 
       this.firestoreService.getCollectionquery<Tarea>(this.path,'quincena','in',['Segunda','Siempre']).subscribe( res=>{
         this.datos=res;
+        
         this.todoList=res;
         this.encabezado='Presupuesto Segunda Quincena de '+this.mesQuincena.charAt(0).toUpperCase() + this.mesQuincena.slice(1).toLowerCase();
         this.filtroStatus();
@@ -475,10 +509,11 @@ limpiar(){
     
     
 
-    if (diaActual < 9 ){ 
+    if (diaActual < 9 ){ //diaActual < 9 lo correcto
       
       this.mesQuincena = moment().subtract(1, 'months').locale('es').format('MMMM'); // Subtract 1 month from the current date mes anterior
       this.onChange2(null);
+     
     }
 
     else{
