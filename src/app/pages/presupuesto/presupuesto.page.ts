@@ -232,7 +232,7 @@ this.tituloAgregarTarea="Nueva Tarea"
 
 cargartodoList(){
  this.firestoreService.getcollection<Tarea>(this.path).subscribe(res=>{
-this.todoList = res;
+this.todoList = res.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
 this.datos= res;
 this.filtroStatus();
 });
@@ -243,14 +243,16 @@ this.filtroStatus();
 filtroStatus(seleccion: string= this.segmentoSeleccion){
 
   if  (seleccion==="Todos"){
-    this.todoList=this.datos;
+    this.todoList=this.datos.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
     
   }
   else{
     
-     this.todoList = this.datos.filter((tarea) => {
+     let datos= this.datos.filter((tarea) => {
      return tarea.status == seleccion;
     });
+
+    this.todoList= datos.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
     
 
   }
@@ -275,7 +277,7 @@ limpiar(){
   let valor= true;
   await this.log.stateauth().subscribe(res=>{
     
-console.log(res);
+
     if (res !== null){
       
       this.uid= res.uid;
@@ -451,7 +453,7 @@ console.log(res);
  this.todoList=await this.datos.filter(tarea=>{
   return tarea.quincena ==='Primera'|| tarea.categoria ==='Siempre'
 });
-this.datos= this.todoList;
+this.datos= this.todoList.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());;
     }
 
    else{// si el mes actual no es el mes seleccionado en determinar quincena
@@ -459,7 +461,7 @@ this.datos= this.todoList;
       return tarea.quincena ==='Primera'|| tarea.categoria ==='Siempre'
     });
 
-   this.datos= this.todoList;
+   this.datos= this.todoList.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());;
 
    }
   }
@@ -490,7 +492,7 @@ this.datos= this.todoList;
       this.firestoreService.getCollectionquery<Tarea>(this.path,'quincena','in',['Segunda','Siempre']).subscribe( res=>{
         this.datos=res;
         
-        this.todoList=res;
+        this.todoList=res.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
         this.encabezado='Presupuesto Segunda Quincena de '+this.mesQuincena.charAt(0).toUpperCase() + this.mesQuincena.slice(1).toLowerCase();
         this.filtroStatus();
         setTimeout(() => {

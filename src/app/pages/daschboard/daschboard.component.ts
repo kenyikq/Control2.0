@@ -94,11 +94,11 @@ export class DaschboardComponent  implements AfterViewInit, OnInit {
          this.pathDeudas='usuarios/'+this.uid+'/deudas';
          this.cargarDatos().then(()=>{
           
-            this.resize().then(()=>{
+        //    this.resize().then(()=>{
               
               
               
-           });
+        //   });
             
           
          });
@@ -116,9 +116,9 @@ export class DaschboardComponent  implements AfterViewInit, OnInit {
    
   }
   ngAfterViewInit(){
-   console.log  ('afterinit');
+   //console.log  ('afterinit');
     this.segment.value=this.mesSeleccion;
-     
+     this.resize();
   }
   
 
@@ -336,7 +336,7 @@ this.cargarDeudas();
  
   ionViewDidEnter() {
     // Aquí coloca el código que deseas ejecutar cada vez que se muestre el componente.
-    console.log('El componente se ha mostrado');
+   
     this.createBarChart();
       this.createDonaChart();
       this.graficoDeudas();

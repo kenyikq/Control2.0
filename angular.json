@@ -16,6 +16,7 @@
             "outputPath": "www",
             "index": "src/index.html",
             "main": "src/main.ts",
+            "serviceWorker": true,
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "allowedCommonJsDependencies": ["apexcharts"],
@@ -45,7 +46,7 @@
             "scripts": [
               "node_modules/apexcharts/dist/apexcharts.min.js"
             ],
-            "serviceWorker": true,
+           
             "ngswConfigPath": "ngsw-config.json"
           },
           "configurations": {

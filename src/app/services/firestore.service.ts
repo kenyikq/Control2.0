@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore/';
-import { take } from 'rxjs';
+
 import { CollectionReference, doc, getDoc } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";

@@ -5,7 +5,7 @@ import { ActionSheetController, AlertController, LoadingController, NavControlle
 import { Registro } from '../models';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
-import { take } from 'rxjs';
+
 
 @Component({
   selector: 'app-movimientos',

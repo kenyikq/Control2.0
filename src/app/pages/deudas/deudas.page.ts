@@ -6,7 +6,7 @@ import { convertToParamMap } from '@angular/router';
 import { ActionSheetController,AlertController,IonInput,IonSelect,LoadingController, NavController, ToastController  } from '@ionic/angular';
 import { Deuda, Pago } from '../models';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { take } from 'rxjs';
+
 
 
 @Component({
