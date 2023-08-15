@@ -62,7 +62,7 @@ export class DaschboardComponent  implements AfterViewInit, OnInit {
     monto:[0]
 };
 
-
+private componenteIniciado: boolean = false;
   
   meses = [
     'Enero',
@@ -93,13 +93,7 @@ export class DaschboardComponent  implements AfterViewInit, OnInit {
          this.path='usuarios/'+this.uid+'/movimientos';
          this.pathDeudas='usuarios/'+this.uid+'/deudas';
          this.cargarDatos().then(()=>{
-          
-        //    this.resize().then(()=>{
-              
-              
-              
-        //   });
-            
+       
           
          });
         
@@ -118,7 +112,7 @@ export class DaschboardComponent  implements AfterViewInit, OnInit {
   ngAfterViewInit(){
    //console.log  ('afterinit');
     this.segment.value=this.mesSeleccion;
-     this.resize();
+    
   }
   
 
@@ -256,7 +250,6 @@ if ( this.subcategoria.nombre.length > 0)
      this.subcategoria.monto.push(suma);
   });
 
-  
 
 }
     
@@ -266,13 +259,23 @@ return this.subcategoria;
    }
 
    async cargarDeudas(){
-    await this.firestoreService.getcollection<Deuda>(this.pathDeudas).subscribe(res=>{
+    await this.firestoreService.getCollectionquery<Deuda>(this.pathDeudas,'status','==','Pendiente').subscribe(res=>{
+      
+
       if(res){
+        console.log('deudas: '+JSON.stringify(res, null, 2));
+        this.deudasDatos={
+          deudor: [] ,
+          pago:[] ,
+          pendiente:[] ,
+        }
         this.deudas=res;
         this.deudas.forEach(deuda=>{
+         
           this.deudasDatos.deudor.push(deuda.acreedor+' (Deuda:'+ deuda.monto.toLocaleString()+') ');
           this.deudasDatos.pago.push(deuda.monto-deuda.montoPendiente);
           this.deudasDatos.pendiente.push(deuda.montoPendiente);
+        
         });
       }
       else{
@@ -341,6 +344,14 @@ this.cargarDeudas();
       this.createDonaChart();
       this.graficoDeudas();
     // Puedes llamar a funciones, realizar acciones o cargar datos aquí.
+    if (!this.componenteIniciado) {
+      // Código que se ejecutará solo la primera vez
+      console.log('Componente se ejecutó por primera vez');
+      this.resize()
+      // Marcar el componente como iniciado
+      this.componenteIniciado = true;
+    }
+  
   }
 
   // Otro código y métodos del componente...
@@ -461,7 +472,7 @@ this.cargarDeudas();
   
                     const percentage = ((value / total) * 100).toFixed(0);
   
-                    return [label+'Valor: ' + new Intl.NumberFormat().format(parseInt(String(value)))+' RD$' + '\n (' + percentage + '%)'];
+                    return [tooltipItem.yLabel+' Valor: ' + new Intl.NumberFormat().format(parseInt(String(value)))+' RD$' + '\n (' + percentage + '%)'];
                   }
                 }
               }
@@ -526,7 +537,7 @@ this.cargarDeudas();
           callbacks: {
             label: function(tooltipItem, data) {
               const value = tooltipItem.value || '';
-              return tooltipItem.xLabel + new Intl.NumberFormat().format(parseInt(value))+' RD$';
+              return tooltipItem.xLabel +' '+ new Intl.NumberFormat().format(parseInt(value))+' RD$';
             }
           }
         },

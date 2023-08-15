@@ -13,6 +13,7 @@ import { DaschboardComponent } from './daschboard/daschboard.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { FechaLargaPipe } from '../fechaLarga.pipe';
 
+
 @NgModule({
   declarations: [FechaLargaPipe, DeudasPage, PresupuestoPage, MovimientosPage, DaschboardComponent, LoginComponent , RegistroComponent],
   imports: [

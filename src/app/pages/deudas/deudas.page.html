@@ -255,7 +255,7 @@
            
         <ion-label style="font-weight: 600;"  class="normal"  >Monto:</ion-label>
          <ion-input  (ionInput)="onInputChanged($event)" #montoAPagar  formControlName="montoP" required="true"  type="number" inputmode="numeric" [(ngModel)]="pago.pago"></ion-input>
-         <ion-chip ><ion-label class="normal">Pendiente:</ion-label> {{montoPendiente}}</ion-chip>
+         <ion-chip ><ion-label style="margin-right: 5px;" class="normal">Pendiente: </ion-label> {{montoPendiente | number}}</ion-chip>
        </ion-item>
 
       </ion-list>

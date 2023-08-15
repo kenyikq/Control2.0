@@ -1,5 +1,5 @@
 import { FirebaseauthService } from './../../services/firebaseauth.service';
-import { Component, OnInit, ViewChild  } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnInit, ViewChild  } from '@angular/core';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import * as moment from 'moment';
 import { convertToParamMap } from '@angular/router';
@@ -99,6 +99,7 @@ export class DeudasPage implements OnInit {
 async guardardatos(){
  await this.showLoading().then(res=>{
   this.newDeuda.status='Pendiente';
+  this.newDeuda.montoPendiente=this.newDeuda.monto;
   this.firestoreservice.createdoc(this.newDeuda,this.path, this.newDeuda.id).then(res=>{
     this.loading.dismiss();
    this.nuevodeuda();
@@ -139,17 +140,25 @@ async guardardatos(){
 
  async aplicarPago(){
     if(this.formPago.valid && this.pago.pago> 0){
+      const pendiente = this.montoPendiente;// calcula el valor pendiente luego del pago
+      
+
       this.pago.montoPendiente=this.montoPendiente;
-      this.newDeuda.montoPendiente=this.montoPendiente;
-      this.newDeuda.pagos.push(this.pago);
+      this.newDeuda.montoPendiente= pendiente;
+      
       
 
       if  (this.montoPendiente === 0){
         this.newDeuda.status='Saldado';
+        this.pago.TipoPago='Saldo';
+        
       }
+      
+      
+      this.newDeuda.pagos.push(this.pago);
     
 
-      this.firestoreservice.createdoc(this.newDeuda, this.path, this.newDeuda.id).then(()=>{
+     this.firestoreservice.createdoc(this.newDeuda, this.path, this.newDeuda.id).then(()=>{
 
         this.presentToast('Pago aplicado Correctamente');
       this.pago ={id:this.firestoreservice.getid(),
