@@ -236,6 +236,7 @@ this.touchedcontrols();
             if(resp){
               this.usuario=resp;
               this.uid=resp.uid;
+              
              
             }
             else{console.log('No hay datos');}

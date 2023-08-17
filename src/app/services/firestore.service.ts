@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment'; //npm install fireba
 import { FirebaseauthService } from './firebaseauth.service';
 import { map } from 'rxjs/operators';
 import { Pago } from '../pages/models';
-
+import { take } from 'rxjs/operators';
 
 
 @Injectable({

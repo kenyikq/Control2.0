@@ -153,11 +153,20 @@ this.idusuario().then(res=>{
   }
 
 
+  onInput(event: any) {
+    const inputValue = event.target.value;
+    const numericValue = inputValue.replace(/[^0-9]/g, ''); // Remover caracteres no numéricos
+    const trimmedValue = numericValue.replace(/^0+/, ''); // Remover ceros al principio
+    event.target.value = trimmedValue;
+  }
+
+
 
   getregistros() {
     this.firestoreservice.getcollection<Registro>(this.path).subscribe(res => {
       if(res){
-        this.registros = res;
+        
+        this.registros = res.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
       
         this.totales();
       }
@@ -365,7 +374,7 @@ this.idusuario().then(res=>{
   }
 
   async filtroMes(){
-  let listado: Registro[] = []
+ 
   this.registros=[];
     if(this.mesSeleccion.length!==0){this.firestoreservice.getCollectionquery<Registro>(this.path,'mes','==',this.mesSeleccion).subscribe(
       res=>{
@@ -374,7 +383,7 @@ this.idusuario().then(res=>{
         if(res ){
 
           if(this.segmentoSeleccion=== 'Todos'){
-            this.registros= res;
+            this.registros= res.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());;
             this.totales();
           }
           else{

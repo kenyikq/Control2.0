@@ -102,7 +102,7 @@
 
       <ion-item>  
         <ion-label>Monto: </ion-label>
-        <ion-input clearInput="true"  formControlName="monto"  required="true" label="Monto:" type="number" inputmode="numeric" [(ngModel)]="newRegistro.monto"></ion-input>
+        <ion-input clearInput="true" (ionInput)="onInput($event)" formControlName="monto"  required="true" label="Monto:" type="number" inputmode="numeric" [(ngModel)]="newRegistro.monto"></ion-input>
 
       
       <span class="normal" *ngIf="this.myForm.get('monto')?.hasError('required') && myForm.get('monto')?.touched">
@@ -148,9 +148,9 @@
 
     
 
-   <ion-card style="margin: 2%">
+   <ion-card style="margin: 2%;  ">
 <div style="margin-left: calc(100% - 90px);  "><ion-list>
-      <ion-item style="height: 29px;">
+      <ion-item style="height: 32px; width: 200px;">
         <ion-select 
         placeholder="Filtrar Mes"
         mode="ios"

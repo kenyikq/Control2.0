@@ -79,19 +79,19 @@ private path= 'usuarios/'+this.uid+'/presupuesto/';
   }
   completar(tarea:Tarea){
     
-    let statuschange =''; 
+   
     let msj='';
     if(tarea.status==='Completado'){
-      statuschange= 'Pendiente';
+      tarea.status= 'Pendiente';
       msj='Tarea Deshecha';
-      this.firestoreService.updateStatus(statuschange,tarea.id,this.path).then(res=>{
+      this.firestoreService.updateStatus(tarea.status,tarea.id,this.path).then(res=>{
         this.presentToast(msj);
       })
     }
     else{
-      statuschange= 'Completado';
+      tarea.status= 'Completado';
       msj='Tarea Completada';
-      this.firestoreService.updateStatus(statuschange,tarea.id,this.path).then(res=>{
+      this.firestoreService.updateStatus(tarea.status,tarea.id,this.path).then(res=>{
         this.presentToast(msj);
         this.guardarGasto(tarea);
       })
@@ -230,26 +230,18 @@ this.tituloAgregarTarea="Nueva Tarea"
 
 }
 
-cargartodoList(){
- this.firestoreService.getcollection<Tarea>(this.path).subscribe(res=>{
-this.todoList = res.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
-this.datos= res;
-this.filtroStatus();
-});
 
-
-}
 
 filtroStatus(seleccion: string= this.segmentoSeleccion){
 
-  if  (seleccion==="Todos"){
+  if  (this.segmentoSeleccion==="Todos"){
     this.todoList=this.datos.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
-    
+    console.log('todos');
   }
   else{
     
      let datos= this.datos.filter((tarea) => {
-     return tarea.status == seleccion;
+     return tarea.status == this.segmentoSeleccion;
     });
 
     this.todoList= datos.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
@@ -291,7 +283,7 @@ limpiar(){
   
    setTimeout(() => {
     
-   // this.filtroStatus();
+   
     this.determinarquicena();
     
    }, 200);
@@ -304,6 +296,9 @@ limpiar(){
   
   return valor;
   }
+
+
+
   async alertaLogin() {
     const alert = await this.alertController.create({
       header: 'Alerta',
@@ -420,6 +415,7 @@ limpiar(){
 
     const mesactual = this.capitalizar(moment().locale('es').format('MMMM'));
    
+   
     if (this.capitalizar(this.mesQuincena) === mesactual) { //si el mes actual es igual al mes seleccionado en determinar quincena, (si esta menor que 9 el mes anterior)
 
  
@@ -432,6 +428,8 @@ limpiar(){
         }
 
         else{//si la tarea esta completada
+          
+        if  (moment( tarea.fecha).locale('es').format('MMMM')!== moment().locale('es').format('MMMM')){// si el mes de la tarea no es igual al mes actual
           if (tarea.categoria !== 'Esporadico') {//Fijo, Variable, Esporadico
             
             const fechamesActual =  moment(tarea.fecha, 'YYYY-MM-DD').set('month', moment().month()); //convierte al mes actual
@@ -439,12 +437,10 @@ limpiar(){
             tarea.status='Pendiente';
             
             this.firestoreService.createdoc(tarea,this.path, tarea.id);
-          }
 
-          
-
+          } 
         }
-
+        }
         
       });
 
@@ -453,16 +449,18 @@ limpiar(){
  this.todoList=await this.datos.filter(tarea=>{
   return tarea.quincena ==='Primera'|| tarea.categoria ==='Siempre'
 });
-this.datos= this.todoList.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());;
+this.datos= this.todoList.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+this.filtroStatus();
     }
 
    else{// si el mes actual no es el mes seleccionado en determinar quincena
     this.todoList=await this.datos.filter(tarea=>{
       return tarea.quincena ==='Primera'|| tarea.categoria ==='Siempre'
+      
     });
 
    this.datos= this.todoList.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());;
-
+   this.filtroStatus();
    }
   }
 
@@ -492,7 +490,9 @@ this.datos= this.todoList.sort((a, b) => new Date(a.fecha).getTime() - new Date(
       this.firestoreService.getCollectionquery<Tarea>(this.path,'quincena','in',['Segunda','Siempre']).subscribe( res=>{
         this.datos=res;
         
-        this.todoList=res.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+        this.todoList=res.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime()).filter(tarea=>{
+          return tarea.status=='Pendiente';
+        });
         this.encabezado='Presupuesto Segunda Quincena de '+this.mesQuincena.charAt(0).toUpperCase() + this.mesQuincena.slice(1).toLowerCase();
         this.filtroStatus();
         setTimeout(() => {

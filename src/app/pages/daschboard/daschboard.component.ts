@@ -263,7 +263,7 @@ return this.subcategoria;
       
 
       if(res){
-        console.log('deudas: '+JSON.stringify(res, null, 2));
+       // console.log('deudas: '+JSON.stringify(res, null, 2));
         this.deudasDatos={
           deudor: [] ,
           pago:[] ,
@@ -340,16 +340,20 @@ this.cargarDeudas();
   ionViewDidEnter() {
     // Aquí coloca el código que deseas ejecutar cada vez que se muestre el componente.
    
-    this.createBarChart();
-      this.createDonaChart();
-      this.graficoDeudas();
+   
     // Puedes llamar a funciones, realizar acciones o cargar datos aquí.
     if (!this.componenteIniciado) {
       // Código que se ejecutará solo la primera vez
-      console.log('Componente se ejecutó por primera vez');
+     
       this.resize()
       // Marcar el componente como iniciado
       this.componenteIniciado = true;
+    }
+
+    else{
+      this.createBarChart();
+      this.createDonaChart();
+      this.graficoDeudas();
     }
   
   }
@@ -365,7 +369,7 @@ this.cargarDeudas();
       this.createBarChart();
       this.createDonaChart();
       this.graficoDeudas();
-     }, 5000);
+     }, 3000);
    
    }
 

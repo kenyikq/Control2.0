@@ -104,7 +104,7 @@
 
       <ion-item class="normal">  
        <ion-label>Monto:</ion-label>
-        <ion-input style="text-align: right;" required="true" label="Monto:" type="number" inputmode="numeric" [(ngModel)]="newDeuda.monto"></ion-input>
+        <ion-input (ionInput)="onInput($event)" style="text-align: right;" required="true" label="Monto:" type="text" pattern="[0-9]*" inputmode="numeric" [(ngModel)]="newDeuda.monto"></ion-input>
 
      
       </ion-item>
@@ -183,6 +183,13 @@
       </ion-row>
   
     </ion-grid>
+    <ion-footer>
+      <ion-card style=" text-align: end;;">
+      
+        <ion-label  style="margin-right:5%; color: #f17f7f !important;" class="normal">Total Deuda = {{totalDeuda | number}} </ion-label>
+    
+      </ion-card>
+    </ion-footer>
   </ion-card>
 
     <ion-fab class="agregar"  style="margin-top: 29px;  " slot="fixed" vertical="top" horizontal="end" [edge]="true">

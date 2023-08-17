@@ -38,7 +38,7 @@ export class DeudasPage implements OnInit {
   loading:any;
   mesSeleccion =moment(new Date()).locale('es').format('MMMM');
   segmentoSeleccion='Pendiente';
-
+  totalDeuda=0;
 
   constructor(public firestoreservice: FirestoreService,
     private actionSheetCtrl: ActionSheetController,
@@ -456,7 +456,7 @@ async idusuario(){
 
                           
             }
-  
+            this.deudaAcumulada();
            
           }
   
@@ -464,10 +464,18 @@ async idusuario(){
         }
         
       );
-  
+ 
       
     }
     else{this.alerta('Debe seleccionar un mes');}
+  }
+
+
+  onInput(event: any) {
+    const inputValue = event.target.value;
+    const numericValue = inputValue.replace(/[^0-9]/g, ''); // Remover caracteres no numéricos
+    const trimmedValue = numericValue.replace(/^0+/, ''); // Remover ceros al principio
+    event.target.value = trimmedValue;
   }
      
   async alerta(msgAlerta: string) {
@@ -488,6 +496,19 @@ async idusuario(){
     });
 
     await alert.present();
+  }
+
+  deudaAcumulada(){
+    this.totalDeuda = 0;
+      
+    this.deudas.forEach((deuda)=>{
+    
+
+      if (deuda.status==='Pendiente'){
+        this.totalDeuda = parseFloat(this.totalDeuda.toString()) +  parseFloat(deuda.montoPendiente.toString());
+    }
+
+    });
   }
 
  
