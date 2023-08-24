@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import * as moment from 'moment';
 import { ActionSheetController, AlertController, LoadingController, NavController, ToastController } from '@ionic/angular';
-import { Registro } from '../models';
+import { Deuda, Registro } from '../models';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 
@@ -26,6 +26,23 @@ export class MovimientosPage implements OnInit {
   mesSeleccion =moment(new Date()).locale('es').format('MMMM');
   segmentoSeleccion='Todos';
 
+  newDeuda: Deuda= {
+    id: this.firestoreservice.getid(),
+    fecha:moment(new Date()).format('YYYY-MM-DD'),
+    fechaPago: moment(new Date()).format('YYYY-MM-DD'),
+    TipoPrestamo: '',
+    acreedor:  '',
+    concepto:  '',
+    status:  'Pendiente',
+    monto: 0,
+    montoPendiente: 0,
+    pagos:[],
+    mes:   new Date().getMonth().toString(),
+    dia:   new Date().getDay().toString(),
+    anio:  moment().format('yyyy'),
+
+  }
+
 
   constructor(public firestoreservice: FirestoreService,
     private actionSheetCtrl: ActionSheetController,
@@ -47,6 +64,8 @@ this.idusuario().then(res=>{
       categoria: ['', Validators.required],
       subcategoria: ['', Validators.required],
       monto: ['', [Validators.required, Validators.min(1)]],
+      acreedor: [],
+      tipoPrestamo: [],
     });
   }
 
@@ -80,12 +99,14 @@ this.idusuario().then(res=>{
   async guardardatos() {
 
     if (this.myForm.valid) {
+      this.crearDeudas();
       await this.showLoading().then(res => {
         
         this.firestoreservice.createdoc(this.newRegistro, this.path, this.newRegistro.id).then(res => {
           this.loading.dismiss();
           this.presentToast('Registro guardado Correctamente');
           this.nuevoregistro();
+          
           this.status = 'visualizando';
         }).catch(error => {
           this.presentToast('Error al intentar guardar registro: ' + error.toString());
@@ -408,6 +429,44 @@ this.idusuario().then(res=>{
   }
   else{this.alerta('Debe seleccionar un mes');}
 }
+
+
+async crearDeudas(){
+  
+   this.newDeuda.status='Pendiente';
+   this.newDeuda.concepto=this.newRegistro.concepto;
+   this.newDeuda.monto=this.newRegistro.monto;
+   this.newDeuda.montoPendiente=this.newDeuda.monto;
+  
+   this.firestoreservice.createdoc(this.newDeuda,'usuarios/'+this.uid+'/deudas/', this.newDeuda.id).then(res=>{
+     this.loading.dismiss();
+     this.newDeuda = {
+      id: this.firestoreservice.getid(),
+      fecha:moment().format('YYYY-MM-DD'),
+      fechaPago: moment().format('YYYY-MM-DD'),
+      TipoPrestamo: '',
+      acreedor:  '',
+      concepto:  '',
+      status:  'Pendiente',
+      monto: 0,
+      montoPendiente: 0,
+      pagos:[],
+      mes:   new Date().getMonth().toString(),
+      dia:   new Date().getDay().toString(),
+      anio:  moment().format('yyyy'),
+  
+    }
+    
+     }).catch(error=>{
+       this.presentToast('Error al intentar guardar registro: '+ error.toString());
+    });
+    
+ 
+
+  
+  
+ }
+
   
 
 

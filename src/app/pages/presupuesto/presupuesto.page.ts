@@ -207,6 +207,8 @@ fechaa() {
 
   
 }
+
+
 agregarTarea(){
  
   
@@ -408,6 +410,7 @@ limpiar(){
      this.modal2.dismiss();
    }, 100);   
       
+  
     
   }
 
@@ -423,14 +426,13 @@ limpiar(){
 
       await datos.forEach(tarea => {
         if (tarea.status === 'Pendiente') { 
-          
-          
+         
         }
 
         else{//si la tarea esta completada
           
         if  (moment( tarea.fecha).locale('es').format('MMMM')!== moment().locale('es').format('MMMM')){// si el mes de la tarea no es igual al mes actual
-          if (tarea.categoria !== 'Esporadico') {//Fijo, Variable, Esporadico
+          if (tarea.categoria !== 'Esporadico') {//si no es variable y esta completado actualiza la fecha
             
             const fechamesActual =  moment(tarea.fecha, 'YYYY-MM-DD').set('month', moment().month()); //convierte al mes actual
             tarea.fecha = fechamesActual.format('YYYY-MM-DD');
@@ -439,6 +441,10 @@ limpiar(){
             this.firestoreService.createdoc(tarea,this.path, tarea.id);
 
           } 
+
+          else{//si es esporadico y esta completado lo elimina
+            this.firestoreService.deletedoc(tarea.id,this.path);
+          }
         }
         }
         
@@ -446,22 +452,39 @@ limpiar(){
 
  // console.log('actulizar todos los datos: '+JSON.stringify(actulizarMesActual, null, 2));
  
- this.todoList=await this.datos.filter(tarea=>{
-  return tarea.quincena ==='Primera'|| tarea.categoria ==='Siempre'
+ this.todoList= await this.datos.filter(tarea=>{
+  return tarea.quincena ==='Primera'|| tarea.quincena ==='Siempre';
 });
+
+
+
 this.datos= this.todoList.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+this.todoList.forEach((tarea)=>{
+  if(tarea.quincena==="Siempre"){
+    tarea.fecha= moment().locale('es').date(15).format('YYYY-MM-DD');
+  }
+});
+
+console.log(this.todoList);
 this.filtroStatus();
+
+
     }
 
    else{// si el mes actual no es el mes seleccionado en determinar quincena
+
+    console.log('else');
     this.todoList=await this.datos.filter(tarea=>{
       return tarea.quincena ==='Primera'|| tarea.categoria ==='Siempre'
       
     });
 
-   this.datos= this.todoList.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());;
+   this.datos= this.todoList.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+  
    this.filtroStatus();
    }
+
+  
   }
 
 
@@ -493,6 +516,14 @@ this.filtroStatus();
         this.todoList=res.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime()).filter(tarea=>{
           return tarea.status=='Pendiente';
         });
+
+        this.todoList.forEach((tarea)=>{
+          if(tarea.quincena==="Siempre"){
+            tarea.fecha= moment().locale('es').date(30).format('YYYY-MM-DD');
+          }
+        });
+
+
         this.encabezado='Presupuesto Segunda Quincena de '+this.mesQuincena.charAt(0).toUpperCase() + this.mesQuincena.slice(1).toLowerCase();
         this.filtroStatus();
         setTimeout(() => {

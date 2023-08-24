@@ -24,7 +24,7 @@
 
 <ion-content>
  
-  <ion-card *ngIf="status !== 'visualizando'" class="normal contenedor">
+  <ion-card *ngIf="status !== 'visualizando'" class="normal contenedor" style="max-width: 500px;">
     <form [formGroup]="myForm" novalidate> 
     <h1 class="subtitulo p-3 text-center encabezado colorB" style="border-radius: 15px;">Ingrese los datos</h1>
    
@@ -73,10 +73,11 @@
       <ion-select  clearInput="true"  formControlName="subcategoria"  required="true" mode="ios" label="Subcategoria:" aria-label="Fruit" interface="popover" value="newRegistro.subcategoria" [(ngModel)]="newRegistro.subcategoria"placeholder="Seleccionar">
         <ion-select-option *ngIf="newRegistro.categoria === 'Ingresos'" value="Sueldo">Sueldo</ion-select-option>
         <ion-select-option *ngIf="newRegistro.categoria === 'Ingresos'" value="Regalo">Regalo</ion-select-option>
+        <ion-select-option *ngIf="newRegistro.categoria === 'Ingresos'" value="Prestamo">Prestamo</ion-select-option>
+        <ion-select-option *ngIf="newRegistro.categoria === 'Ingresos'" value="Otro">Otro</ion-select-option>
         <ion-select-option *ngIf="newRegistro.categoria === 'Gastos'"  value="Ahorro">Ahorro</ion-select-option>
         <ion-select-option *ngIf="newRegistro.categoria === 'Gastos'"  value="Combustible">Combustible</ion-select-option>
         <ion-select-option *ngIf="newRegistro.categoria === 'Gastos'"  value="Alimentos">Alimentos</ion-select-option>
-        <ion-select-option *ngIf="newRegistro.categoria === 'Gastos'"  value="Prestamo">Prestamo</ion-select-option>
         <ion-select-option *ngIf="newRegistro.categoria === 'Gastos'"  value="Deudas">Deudas</ion-select-option>
         <ion-select-option *ngIf="newRegistro.categoria === 'Gastos'"  value="Diezmo">Diezmo</ion-select-option>
         <ion-select-option *ngIf="newRegistro.categoria === 'Gastos'"  value="Emely">Emely</ion-select-option>
@@ -92,6 +93,38 @@
       <ion-label color="danger">Subcategoria es requerida.</ion-label>
     </span>
   </ion-list>
+  <ion-item>
+  <ion-label > 
+    Categoria:
+   </ion-label>
+  <ion-select clearInput="true"  formControlName="categoria" required="true" mode="ios" label="Categoria:" aria-label="Fruit" interface="popover" value="newRegistro.categoria" [(ngModel)]="newRegistro.categoria"placeholder=" Seleccionar">
+    <ion-select-option value="Ingresos">Ingresos</ion-select-option>
+    <ion-select-option value="Gastos">Gastos</ion-select-option>
+   
+  </ion-select>
+</ion-item>
+
+  <ion-list   *ngIf="newRegistro.subcategoria === 'Prestamo'">
+    <ion-item>
+      <ion-label > 
+        Tipo de Prestamo:
+       </ion-label>
+      <ion-select formControlName="tipoPrestamo" required="true" mode="ios" label="Tipo de Prestamo:" interface="popover" value="newDeuda.categoria" [(ngModel)]="newDeuda.TipoPrestamo"placeholder=" Seleccionar">
+        <ion-select-option value="Personal">Personal</ion-select-option>
+        <ion-select-option value="Banco">Banco</ion-select-option>
+        <ion-select-option value="TC">TC</ion-select-option>
+       
+      </ion-select>
+    </ion-item>
+  </ion-list>
+  
+
+  
+  <ion-item  class="normal" *ngIf="newRegistro.subcategoria === 'Prestamo'">
+    <ion-label>Acreedor: </ion-label>
+        <ion-input formControlName="acreedor" placeholder=" Escribir acreedor" style="text-align: right;" label="Acreedor: "  required="true" [(ngModel)]="newDeuda.acreedor" type="string" inputmode="text"></ion-input>
+      </ion-item>
+
 
       <ion-item>
         <ion-label>Concepto: </ion-label>
@@ -203,12 +236,15 @@
       </ion-row>
   
    
-      <ion-row mode="ios" class="wrapper" *ngFor="let registro of registros" (click)="presentActionSheet(registro)">
-        <ion-col style="width: 90px; ">{{registro.fecha  | date: 'dd/MM/yy'}}</ion-col>
+      <ion-row    mode="ios" class="wrapper" *ngFor="let registro of registros" (click)="presentActionSheet(registro)">
+        <ion-col style="width: 90px; ">
+         {{registro.fecha  | date: 'dd/MM/yy'}}</ion-col>
         <ion-col>{{registro.categoria}}</ion-col>
         <ion-col>{{registro.subcategoria}}</ion-col>
         <ion-col class="hide">{{registro.concepto}}</ion-col>
-        <ion-col>{{registro.monto | number}}</ion-col>
+        <ion-col [style.color]="registro.categoria === 'Ingresos'? '#93f86c !important' :'#f17f7f !important'">{{registro.monto | number}}  
+          </ion-col>
+        
         <ion-ripple-effect></ion-ripple-effect>
       </ion-row>
   

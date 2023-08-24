@@ -13,7 +13,7 @@
       <ion-buttons slot="start">
         <ion-menu-button style="color: #ffc107"></ion-menu-button>
       </ion-buttons>
-    <ion-title class="subtitulo" style="text-align: center; margin-right: 5%;">
+    <ion-title class="subtitulo" style="text-align: center; margin-right:2%;">
       Dashboard
     </ion-title>
     
@@ -25,34 +25,39 @@
  <ion-content scroll-y>
 
 
-  
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        
+        <ion-card >
+          <h2 class="subtitulo" style="text-align: center;">Comportamiento de Ingresos vs Gastos</h2>
+      
+          <div style="margin-right:2% ;margin-left:2%;">
+            <ion-segment (ionChange)="changeSegment($event)" value="Todo" scrollable="true" mode="ios">
+              <ion-segment-button value="Todo">
+                <ion-label>Todo</ion-label>
+              </ion-segment-button>
+              <ion-segment-button value="Gastos">
+                <ion-label>Gastos</ion-label>
+              </ion-segment-button>
+              <ion-segment-button value="Ingresos">
+                <ion-label>Ingresos</ion-label>
+              </ion-segment-button>
+            </ion-segment>
+          </div>
+      
+          <ion-card-content >
+            <canvas #barChart class="pantalla"></canvas>
+          </ion-card-content>
+       
+      
+      </ion-card>
 
-  <ion-card>
-    <h2 class="subtitulo" style="text-align: center;">Comportamiento de Ingresos vs Gastos</h2>
-
-    <div style="margin-right: 5% ;margin-left: 5%;">
-      <ion-segment (ionChange)="changeSegment($event)" value="Todo" scrollable="true" mode="ios">
-        <ion-segment-button value="Todo">
-          <ion-label>Todo</ion-label>
-        </ion-segment-button>
-        <ion-segment-button value="Gastos">
-          <ion-label>Gastos</ion-label>
-        </ion-segment-button>
-        <ion-segment-button value="Ingresos">
-          <ion-label>Ingresos</ion-label>
-        </ion-segment-button>
-      </ion-segment>
-    </div>
-
-    <ion-card-content >
-      <canvas #barChart style="max-height: 261px; position: relative;  width:40vw"></canvas>
-    </ion-card-content>
- 
-
-</ion-card>
-
-
-<ion-card >
+      </ion-col>
+      <ion-col>
+        
+        
+<ion-card class="general" >
   <h2 class="subtitulo" style="text-align: center;">Gastos por Categoria de {{mesSeleccion.charAt(0).toUpperCase()+mesSeleccion.slice(1)}}</h2>
 
   <div style="margin-right: 1% ;margin-left: 1%;">
@@ -68,28 +73,41 @@
 
   <ion-card-content style="text-align: center; align-items: center;" >
     <canvas #doughnutChart style="position: relative; max-height: 258px;  width:50vw"></canvas>
-  <ion-chip style="    margin-top: 5px;" class="subtitulo">Total: {{totales.gastos.toFixed(0) | number}} RD$</ion-chip>
+  
   </ion-card-content>
-
+  <ion-chip style="    margin-top: -3px;" class="subtitulo">Gastos: {{totales.gastos.toFixed(0) | number}} RD$</ion-chip>
 
 </ion-card>
 
+      </ion-col>
+      <ion-col>
+        
+        
 
-<ion-card>
+<ion-card class="general" >
   <h2 class="subtitulo" style="text-align: center;">Control de Deudas</h2>
 
-  <div style="margin-right: 5% ;margin-left: 5%;">
+  <div style="margin-right:2% ;margin-left:2%;">
    
    
   </div>
 
-  <ion-card-content >
+  <ion-card-content style="margin-top: 26px;" >
     <canvas #barChartDeudas style="max-height: 261px; position: relative;  width:40vw"></canvas>
     
   </ion-card-content>
-
+  <ion-chip style="    margin-top: 12px;" class="subtitulo">Deuda: {{totalDeuda| number}} RD$</ion-chip>
 
 </ion-card>
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+
+
+
 
 
 

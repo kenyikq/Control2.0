@@ -1,0 +1,24 @@
+.general{
+
+    max-width: 495px;
+    height: 375px;
+    text-align: center;
+    margin: auto;
+    @media (max-width: 768px) {
+        height: 375px; position: relative;  min-width: 202px; } 
+}
+
+.pantalla{
+
+                @media (max-width: 768px) {
+                 height: 375px; position: relative;  min-width: 202px; } 
+
+            @media (min-width: 769px) and (max-width: 1024px) {
+                max-height: 35vw; position: relative;  width:40vw;
+              }
+              @media (min-width: 1025px) {
+                max-height: 27vw; position: relative;  width:40vw;
+                /* Aquí puedes escribir tus estilos para pantallas grandes */
+              }
+}
+

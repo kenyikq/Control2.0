@@ -42,6 +42,7 @@ export class DaschboardComponent  implements AfterViewInit, OnInit {
     gastos:0,
     ingresos:0
   };
+  totalDeuda=0;
   deudasDatos={
     deudor: [] as any,
     pago:[] as any,
@@ -268,13 +269,15 @@ return this.subcategoria;
           deudor: [] ,
           pago:[] ,
           pendiente:[] ,
-        }
+        };
+        this.totalDeuda=0;
         this.deudas=res;
         this.deudas.forEach(deuda=>{
          
           this.deudasDatos.deudor.push(deuda.acreedor+' (Deuda:'+ deuda.monto.toLocaleString()+') ');
           this.deudasDatos.pago.push(deuda.monto-deuda.montoPendiente);
           this.deudasDatos.pendiente.push(deuda.montoPendiente);
+          this.totalDeuda= parseInt(this.totalDeuda.toString())+parseInt(deuda.montoPendiente.toString());
         
         });
       }
