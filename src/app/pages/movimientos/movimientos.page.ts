@@ -99,7 +99,7 @@ this.idusuario().then(res=>{
   async guardardatos() {
 
     if (this.myForm.valid) {
-      this.crearDeudas();
+      
       await this.showLoading().then(res => {
         
         this.firestoreservice.createdoc(this.newRegistro, this.path, this.newRegistro.id).then(res => {
@@ -437,6 +437,8 @@ async crearDeudas(){
    this.newDeuda.concepto=this.newRegistro.concepto;
    this.newDeuda.monto=this.newRegistro.monto;
    this.newDeuda.montoPendiente=this.newDeuda.monto;
+   this.newDeuda.TipoPrestamo='Personal';//Cambiar
+   this.newDeuda.acreedor='Personal';//Cambiar
   
    this.firestoreservice.createdoc(this.newDeuda,'usuarios/'+this.uid+'/deudas/', this.newDeuda.id).then(res=>{
      this.loading.dismiss();

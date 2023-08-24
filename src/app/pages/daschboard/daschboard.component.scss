@@ -1,11 +1,11 @@
 .general{
 
     max-width: 495px;
-    height: 375px;
+    max-height: 409px;
     text-align: center;
     margin: auto;
     @media (max-width: 768px) {
-        height: 375px; position: relative;  min-width: 202px; } 
+      max-height: 409px; position: relative;  min-width: 202px; } 
 }
 
 .pantalla{

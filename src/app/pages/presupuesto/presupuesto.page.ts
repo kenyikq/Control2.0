@@ -33,6 +33,7 @@ export class PresupuestoPage implements OnInit {
   valorcheck2 = false;
   isActionSheetOpen= false;
   mesQuincena='';
+  totalPresupuesto=0;
   segmentoSeleccion="Pendiente";
   tituloAgregarTarea="Nueva Tarea"
   presentingElement: any = null;
@@ -239,6 +240,7 @@ filtroStatus(seleccion: string= this.segmentoSeleccion){
   if  (this.segmentoSeleccion==="Todos"){
     this.todoList=this.datos.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
     console.log('todos');
+    this.totalP();
   }
   else{
     
@@ -247,7 +249,7 @@ filtroStatus(seleccion: string= this.segmentoSeleccion){
     });
 
     this.todoList= datos.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
-    
+    this.totalP();
 
   }
 
@@ -487,6 +489,14 @@ this.filtroStatus();
   
   }
 
+  totalP(){
+    this.totalPresupuesto=0;
+        
+    this.todoList.forEach((tarea)=>{
+      this.totalPresupuesto=tarea.monto+ this.totalPresupuesto;
+    })
+  }
+
 
 
   async onChange2(ev: any) {
@@ -526,6 +536,11 @@ this.filtroStatus();
 
         this.encabezado='Presupuesto Segunda Quincena de '+this.mesQuincena.charAt(0).toUpperCase() + this.mesQuincena.slice(1).toLowerCase();
         this.filtroStatus();
+        this.totalPresupuesto=0;
+
+        this.todoList.forEach((tarea)=>{
+          this.totalPresupuesto=tarea.monto+ this.totalPresupuesto;
+        })
         setTimeout(() => {
           this.modal2.dismiss();
         }, 100);

@@ -28,7 +28,9 @@
   <ion-card class="normal" style="background: linear-gradient(#121212, #ffffff);" >
 
     <h1 style="text-shadow: 2px 2px 1px rgba(0, 0, 0, 0.5); color: white;" class=" subtitulo p-3 text-center encabezado">{{encabezado}}</h1>
-  <div  >
+ 
+    <div style="text-align: center;"  >
+      <ion-label style ="margin-left :250px;"  class="normal">Total: {{totalPresupuesto| number}} $RD</ion-label>
     <ion-segment #segment [scrollable]="true" (ionChange)="changeSegment($event)" style="max-width: 400px; margin-left: auto; margin-right: auto;" mode="ios"  [value]= segmentoSeleccion>
       <ion-segment-button value="Todos">
         <ion-label>Todos</ion-label>
