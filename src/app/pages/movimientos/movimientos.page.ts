@@ -53,12 +53,7 @@ export class MovimientosPage implements OnInit {
     public log: FirebaseauthService,
     public navCtrl: NavController,
   ) {
-
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register("/serviceworker.js").then(res=>{console.log('registrado: '+res);}).catch(res=>{
-        console.log('No registrado: '+res);
-      });
-   }
+    this.register();
 this.idusuario().then(res=>{
   
   
@@ -86,6 +81,22 @@ this.idusuario().then(res=>{
     this.fechaa();// para cargar el mes y el dia
 
   }
+ // Registers a service worker
+async register() {
+  if ('serviceWorker' in navigator) {
+    try {
+      // Change the service worker URL to see what happens when the SW doesn't exist
+      const registration = await navigator.serviceWorker.register("sw.js");
+      console.log("Service worker registered");
+       
+    } catch (error) {
+      console.log("Error while registering: " + error);
+    }    
+  } else {
+      console.log("Service workers API not available");
+  }
+}; 
+
 
 
   newRegistro: Registro = {

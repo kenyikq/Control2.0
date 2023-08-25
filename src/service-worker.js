@@ -4,6 +4,7 @@ self.addEventListener('install', function(event) {
         return cache.addAll([
           '/',
           '/index.html',
+          '/manifest.json',
           // Aquí puedes agregar más archivos y rutas que deseas cachear
         ]);
       })
@@ -18,3 +19,5 @@ self.addEventListener('install', function(event) {
     );
   });
     
+
+
