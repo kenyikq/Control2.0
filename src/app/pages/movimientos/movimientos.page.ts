@@ -53,6 +53,12 @@ export class MovimientosPage implements OnInit {
     public log: FirebaseauthService,
     public navCtrl: NavController,
   ) {
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register("/serviceworker.js").then(res=>{console.log('registrado: '+res);}).catch(res=>{
+        console.log('No registrado: '+res);
+      });
+   }
 this.idusuario().then(res=>{
   
   
