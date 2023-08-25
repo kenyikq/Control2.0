@@ -248,7 +248,7 @@ filtroStatus(seleccion: string= this.segmentoSeleccion){
      return tarea.status == this.segmentoSeleccion;
     });
 
-    this.todoList= datos.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+    this.todoList = datos.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
     this.totalP();
 
   }
@@ -467,7 +467,7 @@ this.todoList.forEach((tarea)=>{
   }
 });
 
-console.log(this.todoList);
+
 this.filtroStatus();
 
 
@@ -479,6 +479,12 @@ this.filtroStatus();
     this.todoList=await this.datos.filter(tarea=>{
       return tarea.quincena ==='Primera'|| tarea.categoria ==='Siempre'
       
+    });
+    
+    this.todoList.forEach((tarea)=>{
+      if(tarea.quincena==="Siempre"){
+        tarea.fecha= moment().locale('es').date(15).format('YYYY-MM-DD');
+      }
     });
 
    this.datos= this.todoList.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());

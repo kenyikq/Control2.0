@@ -4,23 +4,15 @@
 <head>
   
   <meta charset="utf-8"/>
+  <link rel="manifest" href="src/manifest.json">
   <link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="assets/icon/favicon.png">
 <meta name="theme-color" content="#1976d2">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Control Personal</title>
 
   <base href="/"/>
-  <script>
-    if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/service-worker.js')
-    .then(registration => {
-      console.log('Service Worker registrado con éxito:', registration);
-    })
-    .catch(error => {
-      console.log('Error al registrar el Service Worker:', error);
-    });
-}
-  </script>
+ 
 
   <meta name="color-scheme" content="light dark"/>
   <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
@@ -45,6 +37,17 @@
   <meta name="theme-color" content="#1976d2">
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#1976d2">
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(function(registration) {
+        console.log('Service Worker registrado con éxito:', registration);
+      })
+      .catch(function(error) {
+        console.log('Error al registrar el Service Worker:', error);
+      });
+  }
+</script>
 </head>
 
 <body>
