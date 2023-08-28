@@ -118,22 +118,20 @@ async register() {
     if (this.myForm.valid) {
       
       await this.showLoading().then(res => {
-        
-        this.firestoreservice.createdoc(this.newRegistro, this.path, this.newRegistro.id).then(res => {
-          this.loading.dismiss();
-          this.presentToast('Registro guardado Correctamente');
-          this.nuevoregistro();
           
-          this.status = 'visualizando';
+          this.firestoreservice.createdoc(this.newRegistro, this.path, this.newRegistro.id).then(res => {
         }).catch(error => {
           this.presentToast('Error al intentar guardar registro: ' + error.toString());
-          this.loading.dismiss();
+          
         }).catch(error => {
-          this.loading.dismiss();
+          
         });
 
 
       });
+      this.presentToast('Registro guardado Correctamente');
+          this.nuevoregistro();          
+          this.status = 'visualizando';
     }
 
     else {
@@ -259,7 +257,7 @@ async register() {
     this.loading = await this.loadingCtrl.create({
       cssClass: 'normal',
       message: 'Guardando...',
-      //duration: 3000,
+      duration: 1000,
     });
 
     this.loading.present();
@@ -458,7 +456,7 @@ async crearDeudas(){
    this.newDeuda.acreedor='Personal';//Cambiar
   
    this.firestoreservice.createdoc(this.newDeuda,'usuarios/'+this.uid+'/deudas/', this.newDeuda.id).then(res=>{
-     this.loading.dismiss();
+     
      this.newDeuda = {
       id: this.firestoreservice.getid(),
       fecha:moment().format('YYYY-MM-DD'),

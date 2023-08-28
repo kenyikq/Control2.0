@@ -100,16 +100,16 @@ async guardardatos(){
  await this.showLoading().then(res=>{
   this.newDeuda.status='Pendiente';
   this.newDeuda.montoPendiente=this.newDeuda.monto;
+ 
   this.firestoreservice.createdoc(this.newDeuda,this.path, this.newDeuda.id).then(res=>{
-    this.loading.dismiss();
-   this.nuevodeuda();
-    this.presentToast('Datos agregados Correctamente');
-    this.status='visualizando';
+     
     }).catch(error=>{
       this.presentToast('Error al intentar guardar registro: '+ error.toString());
    });
    
-
+   this.nuevodeuda();
+   this.presentToast('Datos agregados Correctamente');
+   this.status='visualizando';
  });
  
 }
@@ -283,7 +283,7 @@ async mostrarforPago(deuda:Deuda){
     this.loading = await this.loadingCtrl.create({
       cssClass: 'normal',
       message: 'Guardando...',
-      //duration: 3000,
+      duration: 1000,
     });
 
     this.loading.present();

@@ -136,6 +136,8 @@ async ingresar(){
 }
 
 login(){
+  if (navigator.onLine) {//pregunta si hay conexcion a internet
+  
   const credenciales ={
     email: this.usuario.email,
     password: this.usuario.password,
@@ -153,14 +155,16 @@ login(){
     }).catch(err =>{
       alert('Error al ingresar, Verifique sus datos');
     });
-
+  } else {
+    this.alerta('No tienes coneccion a internet');
+  }
 
 }
 
 async presentToast(msg: string) {
   const toast = await this.toastCtrl.create({
    message: msg,
-   duration: 2000,
+   duration: 2500,
    position: 'bottom'
  });
 

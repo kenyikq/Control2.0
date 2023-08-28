@@ -118,12 +118,9 @@ valor=false;
         console.log(path);
        this.firestoreService.createdoc(this.usuario, path, this.uid).then( ans =>{
           
-        this.loading.dismiss().then( () => {
-  
             this.presentToast('Registro exitoso');
             this.navCtrl.navigateRoot('/home');
-          }).catch(() =>{console.log('error de id:');});
-       });
+          })
   
       
   
@@ -147,9 +144,7 @@ valor=false;
  this.guardarDatos();
  }
 
- else{
-  this.loading.dismiss();
- }
+
 
  
 
@@ -159,20 +154,22 @@ valor=false;
   async registrar(){
 
 
-  if(this.myForm.valid)
-    {
+  if(this.myForm.valid )
+      {this.showLoading();
 
-      
      this.registro().catch(err=>{
-      this.loading.dismiss();
+      
       this.alerta('Error al intentar regisrar');
   
   });
    }
 
 
-else{ this.alerta('Validar que los campos esten debidamente llenos');}
-this.touchedcontrols();
+else{ this.alerta('Validar que los campos esten debidamente llenos');
+this.touchedcontrols();}
+
+
+
   }
 
  async salir(){
@@ -198,6 +195,7 @@ this.touchedcontrols();
   this.loading = await this.loadingController.create({
    cssClass: 'normal',
    message:'Guardando',
+   duration:200,
   });
   await this.loading.present();
 
@@ -274,7 +272,7 @@ this.touchedcontrols();
     this.loading = await this.loadingController.create({
       cssClass: 'normal',
       message: 'Registrando...',
-      //duration: 3000,
+      duration: 1000,
     });
 
     this.loading.present();

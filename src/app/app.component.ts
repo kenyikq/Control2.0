@@ -4,7 +4,6 @@ import { Platform } from '@ionic/angular';
 import { FirebaseauthService } from './services/firebaseauth.service';
 import { Usuario } from './pages/models';
 import * as moment from 'moment';
-
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -15,11 +14,15 @@ export class AppComponent {
   connectedTime: string;
   
   constructor(public platform: Platform,
+    
     public firestoreService: FirestoreService,
     public log: FirebaseauthService,) {
       this.startTime = moment(); // Registra el tiempo de inicio
     this.updateConnectedTime(); // Actualiza el tiempo conectado
 
+    this.platform.ready().then(() => {//verificar si la plataforma esta lista para luego verificar la conectividad
+      this.checkNetworkStatus();
+    });
     // Actualiza el tiempo conectado cada segundo
     setInterval(() => {
       this.updateConnectedTime();
@@ -38,6 +41,14 @@ export class AppComponent {
     fecha:new Date(),
     };
 
+    checkNetworkStatus() {
+      
+      if (navigator.onLine) {
+        console.log('La aplicación está en línea');
+      } else {
+        console.log('No hay conexión a Internet');
+      }
+    }
   async getUserInfo(){
 
     this.log.stateauth();

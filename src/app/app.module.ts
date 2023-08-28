@@ -38,7 +38,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     FormsModule,
     ReactiveFormsModule, ],
     
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, FirebaseauthService],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, FirebaseauthService, ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

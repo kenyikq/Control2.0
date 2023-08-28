@@ -80,7 +80,6 @@ private path= 'usuarios/'+this.uid+'/presupuesto/';
   }
   completar(tarea:Tarea){
     
-   
     let msj='';
     if(tarea.status==='Completado'){
       tarea.status= 'Pendiente';
@@ -94,8 +93,8 @@ private path= 'usuarios/'+this.uid+'/presupuesto/';
       msj='Tarea Completada';
       this.firestoreService.updateStatus(tarea.status,tarea.id,this.path).then(res=>{
         this.presentToast(msj);
-        this.guardarGasto(tarea);
-      })
+       });
+      this.guardarGasto(tarea);
     }
     
    
@@ -142,6 +141,7 @@ private path= 'usuarios/'+this.uid+'/presupuesto/';
   this.loading = await this.loadingController.create({
    cssClass: 'normal',
    message:'Guardando',
+   duration: 1000,
   });
   await this.loading.present();
 
