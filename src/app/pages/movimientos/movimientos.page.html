@@ -23,8 +23,12 @@
 </ion-header>
 
 <ion-content>
- 
+
   <ion-card *ngIf="status !== 'visualizando'" class="normal contenedor" style="max-width: 500px;">
+    
+   
+  
+ 
     <form [formGroup]="myForm" novalidate> 
     <h1 class="subtitulo p-3 text-center encabezado colorB" style="border-radius: 15px;">Ingrese los datos</h1>
    
@@ -160,7 +164,8 @@
   </ion-card>
 
   <ion-content *ngIf="status=== 'visualizando'" class="normal">
-    
+
+  
     <h2 style="margin-bottom: 15px; color: aliceblue;" class="subtitulo text-center ">Historico de Movimientos</h2>
     <!---Tabla de transacciones-->
 <div   class="m-3">
@@ -181,7 +186,7 @@
 
     
 
-   <ion-card style="margin: 2%;  ">
+   <ion-card style="margin: 5%;  ">
 <div style="margin-left: calc(100% - 90px);  "><ion-list>
       <ion-item style="height: 32px; width: 200px;">
         <ion-select 

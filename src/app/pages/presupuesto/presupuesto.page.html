@@ -53,9 +53,9 @@
         </ion-card-subtittle>
        
         <ion-item class="normal">
-          <ion-icon *ngIf="tarea.categoria === 'Fijo'" color="danger" size="small" name="ellipse"></ion-icon>
-          <ion-icon *ngIf="tarea.categoria === 'Variable'" color="success" size="small" name="ellipse"></ion-icon>
-          <ion-icon *ngIf="tarea.categoria === 'Esporadico'" color="warning" size="small" name="ellipse"></ion-icon>
+          <ion-icon *ngIf="tarea.fecha < date && tarea.status==='Pendiente'" color="danger" size="small" name="ellipse"></ion-icon>
+          <ion-icon *ngIf="tarea.fecha === date " color="warning" size="small" name="ellipse"></ion-icon>
+          <ion-icon *ngIf="tarea.fecha > date || tarea.status==='Completado'" color="success" size="small" name="ellipse"></ion-icon>
           <ion-label style="text-align: center; margin-left: -61px;" class="subtitulo ">{{tarea.descripcion}}</ion-label>
         </ion-item>
       </ion-card-deader>

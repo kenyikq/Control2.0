@@ -34,7 +34,23 @@
             <ion-icon style="color:#ffc107" name="bar-chart-outline"></ion-icon>
             <ion-label class="normal"> Dashboard</ion-label>
           </ion-item>
-        </ion-menu-toggle></ion-content>
+        </ion-menu-toggle>
+      
+        <ion-card class="normal" style="margin-top: 90%;margin-top: 90%;
+        background-color: rgba(254, 230, 255, -0.8);">
+          
+          <ion-card-header>
+            <ion-label>Usuario:{{usuario.nombre}} </ion-label>
+            
+          </ion-card-header>
+          <ion-card-content>
+            Tiempo Conectado: {{ connectedTime }}
+          </ion-card-content>
+        </ion-card>
+      
+      </ion-content>
+
+      
       </ion-menu>
 
       

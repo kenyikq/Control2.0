@@ -560,7 +560,9 @@ this.filtroStatus();
   determinarquicena(){
     const fechaActual = new Date();
     const diaActual = fechaActual.getDate();
-    
+    const fechaInicio= new Date('2023-08-20')
+    const diferencia = moment(fechaActual, 'YYYY-MM-DD').diff(moment(fechaInicio, 'YYYY-MM-DD'), 'days');
+  
     
 
     if (diaActual < 9 ){ //diaActual < 9 lo correcto
@@ -590,9 +592,10 @@ this.filtroStatus();
   }
 
   activarresaltado(task:Tarea){
-    const mesActual = moment().format('MMMM');
-    const mesTarea =moment(task.fecha).format('MMMM');
-if(mesTarea !== mesActual && task.status==='Pendiente'){
+    const mesActual = moment().format('MM');
+    const mesTarea =moment(task.fecha).format('MM');
+   
+if(mesTarea < mesActual && task.status==='Pendiente'){
   return true;
 }
 else{
