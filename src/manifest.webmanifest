@@ -1,6 +1,6 @@
 {
-  "name": "app",
-  "short_name": "app",
+  "name": "Control Personal",
+  "short_name": "Control-P",
   "theme_color": "#dee2e6",
   "background_color": "#fafafa",
   "display": "standalone",
