@@ -121,9 +121,13 @@ private path= 'usuarios/'+this.uid+'/presupuesto/';
   changeSegment(ev: any) {
     
     this.segmentoSeleccion = ev.detail.value;
-    
+      
     this.filtroStatus();
        
+  }
+
+  cerrarModalTarea(){
+    this.modal.dismiss();
   }
   
 
@@ -421,9 +425,8 @@ limpiar(){
     const mesactual = this.capitalizar(moment().locale('es').format('MMMM'));
    
    
-    if (this.capitalizar(this.mesQuincena) === mesactual) { //si el mes actual es igual al mes seleccionado en determinar quincena, (si esta menor que 9 el mes anterior)
-
- 
+    if (this.capitalizar(this.mesQuincena) === mesactual) { //si el mes actual es igual al mes seleccionado en determinar quincena, (si esta menor que 9 es mes anterior)
+      
      // console.log('Datos para el forecha pag403: ' + JSON.stringify(datos, null, 2));
 
       await datos.forEach(tarea => {
@@ -432,15 +435,29 @@ limpiar(){
         }
 
         else{//si la tarea esta completada
-          
+         
         if  (moment( tarea.fecha).locale('es').format('MMMM')!== moment().locale('es').format('MMMM')){// si el mes de la tarea no es igual al mes actual
+          
           if (tarea.categoria !== 'Esporadico') {//si no es variable y esta completado actualiza la fecha
+
+            //Si la tarea es de la segunda quincena y se paga al inicio del proximo mes
             
-            const fechamesActual =  moment(tarea.fecha, 'YYYY-MM-DD').set('month', moment().month()); //convierte al mes actual
+            if(tarea.quincena === 'Segunda' && parseInt(moment().locale('es').format('D')) < 10){// la opcion es <
+                const fechamesActual =  moment(tarea.fecha, 'YYYY-MM-DD').set('month', moment().month()+1); //suma un mes 
+            
+                tarea.fecha = fechamesActual.format('YYYY-MM-DD');
+            tarea.status='Pendiente';
+            this.firestoreService.createdoc(tarea,this.path, tarea.id);
+
+              }
+
+              else{
+                const fechamesActual =  moment(tarea.fecha, 'YYYY-MM-DD').set('month', moment().month()); //convierte al mes actual
             tarea.fecha = fechamesActual.format('YYYY-MM-DD');
             tarea.status='Pendiente';
-            
             this.firestoreService.createdoc(tarea,this.path, tarea.id);
+              }
+            
 
           } 
 
@@ -455,17 +472,13 @@ limpiar(){
  // console.log('actulizar todos los datos: '+JSON.stringify(actulizarMesActual, null, 2));
  
  this.todoList= await this.datos.filter(tarea=>{
-  return tarea.quincena ==='Primera'|| tarea.quincena ==='Siempre';
+  return tarea.quincena ==='Primera';
 });
 
 
 
 this.datos= this.todoList.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
-this.todoList.forEach((tarea)=>{
-  if(tarea.quincena==="Siempre"){
-    tarea.fecha= moment().locale('es').date(15).format('YYYY-MM-DD');
-  }
-});
+
 
 
 this.filtroStatus();
@@ -477,16 +490,11 @@ this.filtroStatus();
 
     console.log('else');
     this.todoList=await this.datos.filter(tarea=>{
-      return tarea.quincena ==='Primera'|| tarea.categoria ==='Siempre'
+      return tarea.quincena ==='Primera';
       
     });
     
-    this.todoList.forEach((tarea)=>{
-      if(tarea.quincena==="Siempre"){
-        tarea.fecha= moment().locale('es').date(15).format('YYYY-MM-DD');
-      }
-    });
-
+  
    this.datos= this.todoList.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
   
    this.filtroStatus();
@@ -526,19 +534,12 @@ this.filtroStatus();
       
       
 
-      this.firestoreService.getCollectionquery<Tarea>(this.path,'quincena','in',['Segunda','Siempre']).subscribe( res=>{
+      this.firestoreService.getCollectionquery<Tarea>(this.path,'quincena','in',['Segunda']).subscribe( res=>{
         this.datos=res;
         
         this.todoList=res.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime()).filter(tarea=>{
           return tarea.status=='Pendiente';
         });
-
-        this.todoList.forEach((tarea)=>{
-          if(tarea.quincena==="Siempre"){
-            tarea.fecha= moment().locale('es').date(30).format('YYYY-MM-DD');
-          }
-        });
-
 
         this.encabezado='Presupuesto Segunda Quincena de '+this.mesQuincena.charAt(0).toUpperCase() + this.mesQuincena.slice(1).toLowerCase();
         this.filtroStatus();
@@ -575,7 +576,7 @@ this.filtroStatus();
     else{
       this.mesQuincena = moment().locale('es').format('MMMM');//mes actual
 
-      if (diaActual >= 9 && diaActual <= 20) {
+      if (diaActual) { //>= 9 && diaActual <= 20) {
       
         this.onChange(null);
         
@@ -594,8 +595,9 @@ this.filtroStatus();
   activarresaltado(task:Tarea){
     const mesActual = moment().format('MM');
     const mesTarea =moment(task.fecha).format('MM');
+    console.log(moment(task.fecha).isBefore(moment()));
    
-if(mesTarea < mesActual && task.status==='Pendiente'){
+if(moment(task.fecha).isBefore(moment())  && task.status==='Pendiente'){
   return true;
 }
 else{

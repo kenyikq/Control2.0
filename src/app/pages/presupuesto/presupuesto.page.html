@@ -54,13 +54,13 @@
        
         <ion-item class="normal">
           <ion-icon *ngIf="tarea.fecha < date && tarea.status==='Pendiente'" color="danger" size="small" name="ellipse"></ion-icon>
-          <ion-icon *ngIf="tarea.fecha === date " color="warning" size="small" name="ellipse"></ion-icon>
+          <ion-icon *ngIf="tarea.fecha === date  && tarea.status !=='Completado'" color="warning" size="small" name="ellipse"></ion-icon>
           <ion-icon *ngIf="tarea.fecha > date || tarea.status==='Completado'" color="success" size="small" name="ellipse"></ion-icon>
           <ion-label style="text-align: center; margin-left: -61px;" class="subtitulo ">{{tarea.descripcion}}</ion-label>
         </ion-item>
       </ion-card-deader>
 
-      <ion-card-content  style="text-align: center;" class="normal ">
+      <ion-card-content  style="text-align: center; margin-top: -13px;" class="normal ">
         <ion-accordion-group>
           <ion-accordion value="first">
             <ion-item slot="header" color="light">
@@ -123,7 +123,7 @@
           <ion-content style="--background: #fff;">
           <ion-header>
             <ion-toolbar translucent> 
-              <ion-button slot="end" fill="clear" (click)="modal.dismiss()">
+              <ion-button slot="end" fill="clear" (click)="cerrarModalTarea()">
                 
                 <ion-icon color ="danger"  slot="end" name="close"></ion-icon>
               </ion-button>
@@ -173,7 +173,6 @@
             <ion-select   id="quincena" class="normal" clearInput="true"  formControlName="quincena"  required="true" mode="ios" label="quincena:"  interface="popover" [(ngModel)]= "newtarea.quincena" placeholder="Seleccionar">
               <ion-select-option style="width: 213px;" value="Primera">Primera Quincena</ion-select-option>
               <ion-select-option style="width: 213px;" value="Segunda">Segunda Quincena</ion-select-option>
-              <ion-select-option style="width: 213px;" value="Siempre">Siempre</ion-select-option>
           
 
             </ion-select>
@@ -223,7 +222,7 @@
 
             <ion-row style=" margin: auto; padding: 10px">
               <ion-buttons  style=" margin: auto;" >
-                <ion-button style="width: 95px;" shape="round" fill="outline"  color= "danger"  (click)="modal.dismiss()">Cancelar</ion-button>
+                <ion-button style="width: 95px;" shape="round" fill="outline"  color= "danger"  (click)="cerrarModalTarea()">Cancelar</ion-button>
               
                 <ion-button style="width: 95px; margin-left: 10px;" shape="round" fill="solid"   color= "primary" (click)="agregarTarea()">Agregar</ion-button>
               </ion-buttons>

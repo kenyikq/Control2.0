@@ -1,3 +1,4 @@
+import { NotificationsService } from './services/notifications.service';
 import { FirestoreService } from './services/firestore.service';
 import { Component } from '@angular/core';
 import { Platform } from '@ionic/angular';
@@ -14,14 +15,16 @@ export class AppComponent {
   connectedTime: string;
   
   constructor(public platform: Platform,
-    
+    public notification: NotificationsService,
     public firestoreService: FirestoreService,
     public log: FirebaseauthService,) {
+      this.notification.inicializar();
       this.startTime = moment(); // Registra el tiempo de inicio
     this.updateConnectedTime(); // Actualiza el tiempo conectado
 
     this.platform.ready().then(() => {//verificar si la plataforma esta lista para luego verificar la conectividad
       this.checkNetworkStatus();
+      this.notification.inicializar();
     });
     // Actualiza el tiempo conectado cada segundo
     setInterval(() => {
@@ -62,7 +65,7 @@ export class AppComponent {
                 this.usuario=resp;
                
               }
-              else{console.log('No hay datos');}
+              
              
             });
       
